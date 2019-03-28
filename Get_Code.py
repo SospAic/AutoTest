@@ -14,6 +14,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 
+# 匹配图片，适用有图库（多张）的情况
 def match_source(image):
     imagea = Image.open('./pic_code/before_screenshot.png')
     imageb = Image.open('./pic_code/before_screenshot.png')
@@ -71,15 +72,16 @@ def get_track(distance):
     return track
 
 
-def len_byte(value):  # 检测表格长度
+# 检测表格长度
+def len_byte(value):
     length = len(value)
     utf8_length = len(value.encode('utf-8'))
     length = (utf8_length - length) / 2 + length
     return int(length)
 
 
+# 判断元素是否存在
 def is_exist_element(elem):
-    """判断元素是否存在"""
     try:
         WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, elem)))
         return True
