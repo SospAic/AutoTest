@@ -1,17 +1,12 @@
 # -*- coding:utf-8 -*-
 import time
-import pytesseract
 import random
-import os
 import sys
-import json
 import xlwt
 from xlutils3 import copy
 from selenium import webdriver
-from PIL import Image, ImageEnhance
+from PIL import Image
 from selenium.common.exceptions import *
-from selenium.webdriver.support.select import Select
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -27,7 +22,6 @@ def match_source(image):
     list = [imagea, imageb, imagec, imaged]
     # 通过像素差遍历匹配本地原图
     for i in list:
-        # 本人电脑原图与缺口图对应滑块图片横坐标相同，纵坐标原图比缺口图大88px，可根据实际情况修改
         pixel1 = image.getpixel((0, 0))
         pixel2 = i.getpixel((0, 0))
         # pixel[0]代表R值，pixel[1]代表G值，pixel[2]代表B值
@@ -38,7 +32,7 @@ def match_source(image):
 
 # 计算滑块位移距离
 def get_diff_location(image1, image2):
-    # （825,1082）（335,463）为滑块图片区域，可根据实际情况修改
+    # （0,262）（0,118）为滑块图片区域，可根据实际情况修改
     for i in range(0, 262):
         for j in range(0, 118):
             # 遍历原图与缺口图像素值寻找缺口位置
@@ -49,7 +43,7 @@ def get_diff_location(image1, image2):
 
 # 对比RGB值得到缺口位置
 def is_similar(image1, image2, x, y):
-    pixel1 = image1.getpixel((x, y + 0))
+    pixel1 = image1.getpixel((x, y + 0))  # 0为偏移量，可设置
     pixel2 = image2.getpixel((x, y))
     # 截图像素也许存在误差，50作为容差范围
     if abs(pixel1[0] - pixel2[0]) >= 50 and abs(pixel1[1] - pixel2[1]) >= 50 and abs(pixel1[2] - pixel2[2]) >= 50:
@@ -145,7 +139,7 @@ def excel_create(file_path):  # 创建表格
         write_data = code_result[col]
         print('共计%s条数据，当前为%s条，企业名称为\t%s' % (len(code_result), col + 1, write_data[0]))
         for row in range(len(code_result[col])):
-            sheet.write(col+1, row, write_data[row], style1)
+            sheet.write(col + 1, row, write_data[row], style1)
             data_length_index = len(write_data[row].encode('utf-8'))  # 获取当前Unicode字符串长度
             if data_length_index > 10:
                 sheet.col(row).width = int(256 * (data_length_index + 1) * 1.3)
