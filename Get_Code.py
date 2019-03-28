@@ -207,7 +207,7 @@ def get_code(page_num=1):
     print('查询结束，总计%s页' % page_num)
 
 
-def main(value_key=''):
+def login(value_key=''):
     print("打开网页")
     driver.get('https://www.tianyancha.com/search?key=%s' % value_key)
     driver.implicitly_wait(5)
@@ -304,6 +304,12 @@ def main(value_key=''):
     # driver.execute_script("document.documentElement.scrollTop=100000")
 
 
+def main(key='证券', page=1, path='./Code_data.xls'):
+    login(key)
+    get_code(page)
+    excel_create(path)
+
+
 if __name__ == '__main__':
     # path = os.path.abspath(os.path.dirname(__file__))
     # type = sys.getfilesystemencoding()
@@ -311,8 +317,6 @@ if __name__ == '__main__':
     driver = webdriver.Chrome(executable_path=r"D:\Software\ChromePortable\chromedriver.exe")
     driver.implicitly_wait(10)
     code_result = []
-    main('证券')
-    get_code()
-    excel_create(r'C:\Users\Administrator\PycharmProjects\AutoTest\Code_data.xls')
+    main('证券', 2)
     # driver.execute_script("window.alert('执行完毕')")
     driver.quit()
