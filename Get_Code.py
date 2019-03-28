@@ -262,10 +262,10 @@ def login(value_key=''):
             sourceimg = match_source(quekouimg)
             # 获取缺口位置
             visualstack = get_diff_location(sourceimg, quekouimg)
-            # 获取移动距离loc，827为滑块起点位置
+            # 获取移动距离loc，2为滑块起点位置
             loc = visualstack - 2
-            # 生成拖拽移动轨迹，加3是为了模拟滑过缺口位置后返回缺口的情况
-            track_list = get_track(loc)
+            # 生成拖拽移动轨迹，0为偏移量，是为了模拟滑过缺口位置后返回缺口的情况，可设置
+            track_list = get_track(loc + 0)
             time.sleep(2)
             ActionChains(driver).click_and_hold(slideblock).perform()
             time.sleep(0.2)
@@ -297,7 +297,6 @@ def login(value_key=''):
                 time.sleep(3)
                 continue
     time.sleep(3)
-    # driver.execute_script("document.documentElement.scrollTop=100000")
 
 
 def main(key='证券', page=1, path='./Code_data.xls'):
@@ -307,8 +306,6 @@ def main(key='证券', page=1, path='./Code_data.xls'):
 
 
 if __name__ == '__main__':
-    # path = os.path.abspath(os.path.dirname(__file__))
-    # type = sys.getfilesystemencoding()
     sys.stdout = Logger('抓取信用代码证日志.log')
     driver = webdriver.Chrome(executable_path=r"D:\Software\ChromePortable\chromedriver.exe")
     driver.implicitly_wait(10)
