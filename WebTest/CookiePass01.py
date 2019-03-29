@@ -5,11 +5,11 @@ import pickle
 
 
 class CookieLogin(object):
-    def __init__(self, username, password):
+    def __init__(self, url, username, password):
         self.username = username
         self.password = password
-        self.driver = webdriver.Chrome(executable_path="D:\\Software\\ChromePortable\\chromedriver.exe")
-        self.driver.get(url='http://132.42.43.117/ulp/')
+        self.driver = webdriver.Chrome(executable_path=r"D:\Software\ChromePortable\chromedriver.exe")
+        self.driver.get(url=url)
         self.set_cookie()
         self.is_login()
 
@@ -57,4 +57,4 @@ class CookieLogin(object):
 
 
 if __name__ == '__main__':
-    CookieLogin('hefei ', 'abc@123')  # 账号，密码
+    CookieLogin('hefei ', 'abc@123')  # 网址，账号，密码

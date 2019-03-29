@@ -5,45 +5,23 @@ import random
 import os
 import sys
 import json
-import xlwt
-from xlutils3 import copy
 from selenium import webdriver
 from PIL import Image, ImageEnhance
 from selenium.common.exceptions import *
-from selenium.webdriver.support.select import Select
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-
-
-# def excel_create(filename='客户中心测试结果.xls'):
-#     # 创建工作簿
-#     wbk = xlwt.Workbook(encoding='utf-8', style_compression=0)
-#     # 创建工作表
-#     sheet = wbk.add_sheet('客户中心', cell_overwrite_ok=True)
-#     # 表头（table_top_list包含表头每一列的值）
-#     top_text = '集团客户编码'
-#     # 写入表头到sheet 1中，第0行第1列
-#     sheet.write(0, 1, top_text)
-#     # 表的内容
-#     numcatch = driver.find_element_by_xpath("/html/body/div[15]/div[2]/div[2]").text
-#     sheet.write(1, 1, numcatch)
-#     # 保存表格到已有的 excel
-#     wbk.save(filename)
 
 
 def get_auth_code(driver, codeEelement):
     """获取验证码"""
-    driver.save_screenshot('Authcap.png')  # 截取登录页面
+    driver.save_screenshot('./pic_code/Authcap.png')  # 截取登录页面
     imgSize = codeEelement.size   # 获取验证码图片的大小
     imgLocation = get_auth_code.imgElement.location  # 获取验证码元素坐标
     rangle = (int(imgLocation['x']), int(imgLocation['y']), int(imgLocation['x'] + imgSize['width']), int(imgLocation['y']+imgSize['height']))  # 计算验证码整体坐标
-    login = Image.open("Authcap.png")
+    login = Image.open("./pic_code/Authcap.png")
     frame4 = login.crop(rangle)   # 截取验证码图片
-    frame4.save('authcode.png')
-    authcodeImg = Image.open('authcode.png')
+    frame4.save('./pic_code/authcode.png')
+    authcodeImg = Image.open('./pic_code/authcode.png')
     authCodeText = pytesseract.image_to_string(authcodeImg).strip()
     return authCodeText
 
@@ -56,16 +34,6 @@ def code_read(filename='Code_list.txt'):
         cur_line = line.strip().split()
         code_list.append(cur_line)
     return code_list
-
-
-class Counter:
-    """计数器"""
-    def __init__(self, start=0):
-        self.num = start
-
-    def count(self):
-        self.num += 1
-        return self.num
 
 
 def is_exist_element(elem, code='已存在'):
@@ -205,7 +173,7 @@ def customer_manager():
             # driver.execute_script("document.getElementById('busiLicenseInfo_certFile_filefield').click()")
             '''上传开户证件图像'''
             driver.find_element_by_xpath('//*[@id="creditCertiForm"]/div[4]/div[1]/div/div/div/span[1]/input').click()
-            os.system(r'C:\Users\Administrator\PycharmProjects\AutoTest\autoupdate.exe')  # 调用外部Auto_it Script进行功能实现
+            os.system(r'./other/autoupdate.exe')  # 调用外部Auto_it Script进行功能实现
             time.sleep(5)
             '''客户经理信息'''
             # driver.find_element_by_xpath('//*[@id="baseinfo-panel"]/div[5]/div[1]/div/button').click()
@@ -277,6 +245,5 @@ if __name__ == '__main__':
     driver = webdriver.Chrome(executable_path=r"D:\Software\ChromePortable\chromedriver.exe")  # Chrome配置参数
     sys.stdout = Logger('客户创建日志.log')
     main()
-    # excel_create(r'C:\Users\Administrator\PycharmProjects\AutoTestCustumerList-new.xls')
     # driver.execute_script("window.alert('Selenium执行完毕')")
     # driver.quit()
