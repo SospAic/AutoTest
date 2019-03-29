@@ -33,7 +33,7 @@ def excel_by_index(file='file.xls', colindex=0, by_index=0):  # 按表的索引�
 
 
 def login():
-    list_data = excel_by_index(r"C:\Users\Administrator\PycharmProjects\AutoTest\参数列表.xls", 0)
+    list_data = excel_by_index(r"./input_file/参数列表.xls", 0)
     # print(list_data) #  调试用
     if len(list_data) <= 0:
         assert 0, u"Excel数据异常"
@@ -54,7 +54,7 @@ def login():
 if __name__ == '__main__':
     # driver = webdriver.Firefox(firefox_binary=r"D:\Software\Mozilla Firefox\firefox.exe",
     #                           executable_path=r"D:\Software\Mozilla Firefox\geckodriver.exe")  # Firefox配置参数
-    driver = webdriver.Chrome(executable_path="D:\\Software\\ChromePortable\\chromedriver.exe")
+    driver = webdriver.Chrome(executable_path=r"D:\Software\ChromePortable\chromedriver.exe")
     driver.get("https://www.baidu.com/")
     login()
     driver.quit()

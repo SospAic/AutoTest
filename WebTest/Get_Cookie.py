@@ -1,17 +1,12 @@
-import time
 import json
-from selenium import webdriver
-import requests
-import sys
 import time
-import os
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 
 
 def main():
-    driver.find_element_by_id('loginUserCode').send_keys('jinwf2')
-    driver.find_element_by_id('loginPassword').send_keys('abc@123')
+    driver.find_element_by_id('loginUserCode').send_keys('superadmin')
+    driver.find_element_by_id('loginPassword').send_keys('aas_1122')
     driver.find_element_by_name('verifyCode').click()
     print('请输入验证码')
     time.sleep(10)
@@ -36,9 +31,7 @@ if __name__ == '__main__':
     driver.maximize_window()
     main()
     cookies = driver.get_cookies()
-    # print(type(cookies))
-    # print ("".join(cookies))
-    f1 = open('cookie.txt', 'w')
+    f1 = open('./input_file/cookie.txt', 'w')
     f1.write(json.dumps(cookies))
     f1.close
     print(cookies)

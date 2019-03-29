@@ -7,7 +7,7 @@ import logging
 
 from PIL import Image  # 来源于Pillow库
 
-TESSERACT = 'tesseract'  # 调用的本地命令名称
+TESSERACT = './other/tesseract'  # 调用的本地命令名称
 TEMP_IMAGE_NAME = "temp.bmp"  # 转换后的临时文件
 TEMP_RESULT_NAME = "temp"  # 保存识别文字临时文件
 CLEANUP_TEMP_FLAG = True  # 清理临时文件的标识

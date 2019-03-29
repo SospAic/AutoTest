@@ -3,7 +3,8 @@ from PIL import Image
 from PIL import ImageEnhance
 import re
 
-def randomCodeOcr(filename='authcode.png'):
+
+def randomCodeOcr(filename='./pic_code/authcode.png'):
     image = Image.open(filename)
     image = image.convert("L")  # 调用Image对象下的convert()方法，传入L。表示将彩色图像转换为灰度图像
     threshold = 130  # 指定二值化的阙值

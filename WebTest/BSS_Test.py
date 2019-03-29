@@ -26,7 +26,7 @@ def get_auth_code(driver, codeEelement):
     return authCodeText
 
 
-def code_read(filename='Code_list.txt'):
+def code_read(filename='./input_file/Code_list.txt'):
     """加载组织机构代码证列表"""
     f = open(filename)
     code_list = []
@@ -65,16 +65,16 @@ def sys_login(driver, account, passwd, authCode):
         print('登录成功')
         customer_manager()
     except IndexError:
-        f1 = open('cookie.txt')
-        cookie = f1.read()
-        cookie = json.loads(cookie)
-        for c in cookie:
-            driver.add_cookie(c)
-        # # 刷新页面
-        print('尝试Cookie登录')
-        # print(cookie)
-        driver.refresh()
         try:
+            f1 = open('./input_file/cookie.txt')
+            cookie = f1.read()
+            cookie = json.loads(cookie)
+            for c in cookie:
+                driver.add_cookie(c)
+            # # 刷新页面
+            print('尝试Cookie登录')
+            # print(cookie)
+            driver.refresh()
             title = driver.find_element_by_xpath(
                 '/html/body/div[1]/div/section[1]/header/div/div[2]/div[2]/span').text  # 获取登录标识
             time.sleep(2)
@@ -84,17 +84,20 @@ def sys_login(driver, account, passwd, authCode):
         except NoSuchElementException:
             print('Cookie登录失败，正在重新登录')
             sys_login(driver, account, passwd, authCode)
+        except FileNotFoundError:
+            print('未找到cookie文件,请获取后登录')
+            driver.quit()
     except NoSuchElementException:
-        f2 = open('cookie.txt')
-        cookie = f2.read()
-        cookie = json.loads(cookie)
-        for c in cookie:
-            driver.add_cookie(c)
-        # # 刷新页面
-        print('尝试Cookie登录')
-        # print(cookie)
-        driver.refresh()
         try:
+            f2 = open('./input_file/cookie.txt')
+            cookie = f2.read()
+            cookie = json.loads(cookie)
+            for c in cookie:
+                driver.add_cookie(c)
+            # # 刷新页面
+            print('尝试Cookie登录')
+            # print(cookie)
+            driver.refresh()
             title = driver.find_element_by_xpath(
                 '/html/body/div[1]/div/section[1]/header/div/div[2]/div[2]/span').text  # 获取登录标识
             time.sleep(2)
@@ -104,6 +107,9 @@ def sys_login(driver, account, passwd, authCode):
         except NoSuchElementException:
             print('Cookie登录失败，正在重新登录')
             sys_login(driver, account, passwd, authCode)
+        except FileNotFoundError:
+            print('未找到cookie文件,请获取后登录')
+            driver.quit()
 
 
 def customer_manager():
@@ -223,11 +229,11 @@ def main():
     get_auth_code.authCodeText = get_auth_code(driver, get_auth_code.imgElement)
     print('验证码为：' + get_auth_code.authCodeText)
     print('正在登录')
-    sys_login(driver, 'jinwf2', 'abc@123', get_auth_code.authCodeText)
+    sys_login(driver, 'superadmin', 'aas_1122', get_auth_code.authCodeText)
 
 
 class Logger(object):  # Log日志记录
-    def __init__(self, filename="Default.log"):
+    def __init__(self, filename="./log/Default.log"):
         self.terminal = sys.stdout
         self.log = open(filename, "a", encoding="utf-8")
 
@@ -243,7 +249,7 @@ if __name__ == '__main__':
     # driver = webdriver.Firefox(firefox_binary=r"D:\Software\Mozilla Firefox\firefox.exe",
     #                           executable_path=r"D:\Software\Mozilla Firefox\geckodriver.exe")  # Firefox配置参数
     driver = webdriver.Chrome(executable_path=r"D:\Software\ChromePortable\chromedriver.exe")  # Chrome配置参数
-    sys.stdout = Logger('客户创建日志.log')
+    sys.stdout = Logger('./log/客户创建日志.log')
     main()
     # driver.execute_script("window.alert('Selenium执行完毕')")
     # driver.quit()

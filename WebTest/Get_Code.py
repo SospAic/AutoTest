@@ -91,7 +91,7 @@ def is_exist_element(elem):
 
 # Log日志记录
 class Logger(object):
-    def __init__(self, filename="Default.log"):
+    def __init__(self, filename="./log/Default.log"):
         self.terminal = sys.stdout
         self.log = open(filename, "a", encoding="utf-8")
 
@@ -304,14 +304,14 @@ def login(value_key=''):
 
 
 # 等于Class.__init__
-def main(key='证券', page=1, path='./Code_data.xls'):
+def main(key='证券', page=1, path='./output_file/Code_data.xls'):
     login(key)
     get_code(page)
     excel_create(path)
 
 
 if __name__ == '__main__':
-    sys.stdout = Logger('抓取信用代码证日志.log')
+    sys.stdout = Logger('./log/抓取信用代码证日志.log')
     driver = webdriver.Chrome(executable_path=r"D:\Software\ChromePortable\chromedriver.exe")
     driver.implicitly_wait(10)
     code_result = []

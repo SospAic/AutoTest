@@ -192,7 +192,7 @@ def main():
 
 
 class Logger(object):  # Log日志记录
-    def __init__(self, filename="Default.log"):
+    def __init__(self, filename="./log/Default.log"):
         self.terminal = sys.stdout
         self.log = open(filename, "a", encoding="utf-8")
 
@@ -208,7 +208,7 @@ if __name__ == '__main__':
     # driver = webdriver.Firefox(firefox_binary=r"D:\Software\Mozilla Firefox\firefox.exe",
     #                           executable_path=r"D:\Software\Mozilla Firefox\geckodriver.exe")  # Firefox配置参数
     driver = webdriver.Chrome(executable_path="D:\\Software\\ChromePortable\\chromedriver.exe")  # Chrome配置参数
-    sys.stdout = Logger('集团客户信息测试结果.log')
+    sys.stdout = Logger('./log/集团客户信息测试结果.log')
     main()
     time.sleep(5)
     customer_manager()

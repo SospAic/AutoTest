@@ -135,7 +135,7 @@ def main():
 
 class Logger(object):  # Log日志记录
 
-    def __init__(self, filename="Default.log"):
+    def __init__(self, filename="./log/Default.log"):
         self.terminal = sys.stdout
         self.log = open(filename, "a", encoding="utf-8")
 
@@ -150,9 +150,9 @@ class Logger(object):  # Log日志记录
 if __name__ == '__main__':
     # path = os.path.abspath(os.path.dirname(__file__))
     # type = sys.getfilesystemencoding()
-    sys.stdout = Logger('测试结果.log')
+    sys.stdout = Logger('./log/测试结果.log')
     driver = webdriver.Chrome(executable_path=r"D:\Software\ChromePortable\chromedriver.exe")
     main()
-    excel_create(r'C:\Users\Administrator\PycharmProjects\AutoTest\Code_data.xls')
+    excel_create(r'./output_file/Code_data.xls')
     # driver.execute_script("window.alert('执行完毕')")
     driver.quit()
