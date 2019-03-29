@@ -89,7 +89,8 @@ def is_exist_element(elem):
         return False
 
 
-class Logger(object):  # Log日志记录
+# Log日志记录
+class Logger(object):
     def __init__(self, filename="Default.log"):
         self.terminal = sys.stdout
         self.log = open(filename, "a", encoding="utf-8")
@@ -102,7 +103,8 @@ class Logger(object):  # Log日志记录
         pass
 
 
-def excel_create(file_path):  # 创建表格
+# 创建表格
+def excel_create(file_path):
     title = driver.title
     # 创建文件
     wbk = xlwt.Workbook(encoding='utf-8', style_compression=0)
@@ -150,6 +152,7 @@ def excel_create(file_path):  # 创建表格
     print('保存表格成功,当前时间为: ' + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
 
 
+# 爬虫
 def get_code(page_num=1):
     for select_page in range(page_num):
         search_result_tree = driver.find_elements_by_xpath('//*[@id="web-content"]/div/div[1]/div[2]/div[4]/div')
@@ -203,6 +206,7 @@ def get_code(page_num=1):
     print('查询结束，总计%s页' % page_num)
 
 
+# 登录
 def login(value_key=''):
     print("打开网页")
     driver.get('https://www.tianyancha.com/search?key=%s' % value_key)
@@ -299,6 +303,7 @@ def login(value_key=''):
     time.sleep(3)
 
 
+# 等于Class.__init__
 def main(key='证券', page=1, path='./Code_data.xls'):
     login(key)
     get_code(page)
