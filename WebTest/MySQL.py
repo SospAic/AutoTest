@@ -2,7 +2,7 @@ import pymysql
 
 
 class MySQLConnect:
-    def __init__(self, host="10.124.147.173", name="hj_test_cust", pwd="Test3333", table="hj_test_cust"):
+    def __init__(self, host="涉密未填写", name="涉密未填写", pwd="涉密未填写", table="涉密未填写"):
         self.host = host
         self.name = name
         self.pwd = pwd
@@ -30,4 +30,4 @@ class MySQLConnect:
 
 if __name__ == '__main__':
     sql = MySQLConnect()
-    sql.sql_execute("SELECT * FROM t.tf_f_cust_group where CUST_ID = 16")
+    sql.sql_execute("SELECT * FROM t.tf_f_cust_group where '涉密未填写'")

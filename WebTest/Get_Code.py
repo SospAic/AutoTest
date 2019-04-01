@@ -203,6 +203,7 @@ def get_code(page_num=1):
                                                        'div.result-footer > div:nth-child(1) > ul > li:nth-child(%s) '
                                                        '> a' % (select_page + 2))
             page.click()
+            time.sleep(3)
     print('查询结束，总计%s页' % page_num)
 
 

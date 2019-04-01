@@ -5,8 +5,8 @@ from selenium.common.exceptions import NoSuchElementException
 
 
 def main():
-    driver.find_element_by_id('loginUserCode').send_keys('superadmin')
-    driver.find_element_by_id('loginPassword').send_keys('aas_1122')
+    driver.find_element_by_id('loginUserCode').send_keys('涉密未填写')
+    driver.find_element_by_id('loginPassword').send_keys('涉密未填写')
     driver.find_element_by_name('verifyCode').click()
     print('请输入验证码')
     time.sleep(10)

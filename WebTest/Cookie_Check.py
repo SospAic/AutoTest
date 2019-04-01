@@ -57,4 +57,4 @@ class CookieLogin(object):
 
 
 if __name__ == '__main__':
-    CookieLogin('hefei ', 'abc@123')  # 网址，账号，密码
+    CookieLogin('涉密未填写 ', '涉密未填写')  # 网址，账号，密码

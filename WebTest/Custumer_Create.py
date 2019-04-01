@@ -187,7 +187,7 @@ def main():
     driver.find_element_by_id('random').click()
     get_auth_code.imgElement = driver.find_element_by_id('yzmId')
     get_auth_code.authCodeText = get_auth_code(driver, get_auth_code.imgElement)
-    sys_login(driver, 'hefei', 'abc@123', get_auth_code.authCodeText)
+    sys_login(driver, '涉密未填写', '涉密未填写', get_auth_code.authCodeText)
     print('正在登录')
 
 
