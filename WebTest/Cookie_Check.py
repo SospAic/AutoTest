@@ -43,7 +43,7 @@ class CookieLogin(object):
             cookies = pickle.load(open("cookies.pkl", "rb"))
             for cookie in cookies:
                 cookie_dict = {
-                    "domain": ".132.42.43.117/",  # 火狐浏览器不用填写，谷歌要需要
+                    "domain": "'涉密未填写'/",  # 火狐浏览器不用填写，谷歌要需要
                     'name': cookie.get('name'),
                     'value': cookie.get('value'),
                     "expires": "",
