@@ -1,9 +1,11 @@
 # -*- coding:utf-8 -*-
+import os
 import time
 import random
 import sys
+import xlrd
 import xlwt
-from xlutils3 import copy
+from xlutils3.copy import copy
 from selenium import webdriver
 from PIL import Image
 from selenium.common.exceptions import *
@@ -103,13 +105,38 @@ class Logger(object):
         pass
 
 
+# 计数器
+class Counter:
+    def __init__(self, start=0):
+        self.num = start
+
+    def count(self):
+        self.num += 1
+        return self.num
+
+
+# 异常重启
+def restart_program():
+    time.sleep(1)
+    print('模块即将重启，请稍后')
+    python = sys.executable
+    file_name = sys.argv[0]
+    os.execl(python, python, file_name)
+
+
 # 创建表格
 def excel_create(file_path):
-    title = driver.title
-    # 创建文件
-    wbk = xlwt.Workbook(encoding='utf-8', style_compression=0)
+    create_num = str(random.randint(1, 1000))
+    if os.path.exists('./output_file/Code_data.xls'):
+        # 打开已有表
+        old = xlrd.open_workbook('./output_file/Code_data.xls', formatting_info=True)
+        # 复制原有表
+        new = copy(old)
+    else:
+        # 创建文件
+        new = xlwt.Workbook(encoding='utf-8', style_compression=0)
     # 创建Sheet页
-    sheet = wbk.add_sheet(title[0:2], cell_overwrite_ok=True)
+    sheet = new.add_sheet(key_value + create_num, cell_overwrite_ok=True)
     # 列名
     table_top_list = ['企业名称', '统一社会信用代码', '注册资本', '工商注册号', '组织机构代码', '注册地址', '行业']
     # 设置表头单元格及文本样式
@@ -136,75 +163,108 @@ def excel_create(file_path):
         """设置单元格宽度"""
         if data_length_index > 10:
             sheet.col(row).width = 256 * (data_length_index + 1)
-        print('列名共%s条,正在添加\t%s' % (str(len(table_top_list)), write_data))
+        print('列名共{}条,正在添加\t{}'.format(str(len(table_top_list)), write_data))
     # 写入内容
     print('开始写入数据')
     for col in range(len(code_result)):
         write_data = code_result[col]
-        print('共计%s条数据，当前为%s条，企业名称为\t%s' % (len(code_result), col + 1, write_data[0]))
+        print('共计{}条数据，当前为{}条，企业名称为\t{}'.format(len(code_result), col + 1, write_data[0]))
         for row in range(len(code_result[col])):
             sheet.write(col + 1, row, write_data[row], style1)
             data_length_index = len(write_data[row].encode('utf-8'))  # 获取当前Unicode字符串长度
             if data_length_index > 10:
-                sheet.col(row).width = int(256 * (data_length_index + 1) * 1.3)
+                width = int(256 * (data_length_index + 1) * 1.3)
+                if width > 65535:
+                    sheet.col(row).width = 65535
+                else:
+                    sheet.col(row).width = width
     # 保存表格
-    wbk.save(file_path)
+    new.save(file_path)
     print('保存表格成功,当前时间为: ' + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
 
 
 # 爬虫
 def get_code(page_num=1):
-    for select_page in range(page_num):
-        search_result_tree = driver.find_elements_by_xpath('//*[@id="web-content"]/div/div[1]/div[2]/div[4]/div')
-        print('开始查询第%s页数据，当前页共计%s条数据' % (select_page + 1, len(search_result_tree)))
-        for num in range(len(search_result_tree)):
-            item = search_result_tree[num].find_element_by_xpath(
-                '//*[@id="web-content"]/div/div[1]/div[2]/div[4]/div[%s]/div/div[3]/div[1]/a' % (num + 1))
-            WebDriverWait(driver, 10).until(EC.element_to_be_clickable(
-                (By.XPATH,
-                 '//*[@id="web-content"]/div/div[1]/div[2]/div[4]/div[%s]/div/div[3]/div[1]/a' % (
-                         num + 1)))).click()
-            driver.execute_script("arguments[0].scrollIntoView(true);", item)  # 定位当前链接
-            # ActionChains(driver).move_to_element(item).perform()
-            # href_get = item.get_attribute('href')
-            # driver.execute_script("window.open('%s')" % href_get)
-            # item.click()
-            driver.switch_to.window(driver.window_handles[1])
-            code_list = []
-            WebDriverWait(driver, 10).until(EC.element_to_be_clickable(
-                (By.XPATH, '//*[@id="company_web_top"]/div[2]/div[3]/div[1]/h1')))
-            code_name = driver.find_element_by_xpath('//*[@id="company_web_top"]/div[2]/div[3]/div[1]/h1').text
-            code_list.append(code_name)
-            code_code = driver.find_element_by_xpath(
-                '//*[@id="_container_baseInfo"]/table[2]/tbody/tr[3]/td[2]').text
-            code_list.append(code_code)
-            registered_capital = driver.find_element_by_xpath(
-                '//*[@id="_container_baseInfo"]/table[2]/tbody/tr[1]/td[2]/div').get_attribute('title')
-            code_list.append(registered_capital)
-            registration_number = driver.find_element_by_xpath(
-                '//*[@id="_container_baseInfo"]/table[2]/tbody/tr[2]/td[4]').text
-            code_list.append(registration_number)
-            organization_code = driver.find_element_by_xpath(
-                '//*[@id="_container_baseInfo"]/table[2]/tbody/tr[3]/td[4]').text
-            code_list.append(organization_code)
-            address = driver.find_element_by_xpath('//*[@id="_container_baseInfo"]/table[2]/tbody/tr[9]/td[2]').text
-            code_list.append(address)
-            industry = driver.find_element_by_xpath(
-                '//*[@id="_container_baseInfo"]/table[2]/tbody/tr[5]/td[4]').text
-            code_list.append(industry)
-            code_result.append(code_list)
+    try:
+        for select_page in range(page_num):
+            # 判断页面结构
+            x_path_tree = '//div[contains(@class,"result-list sv-search-container")]'
+            search_result_tree = driver.find_elements_by_xpath('{}/div'.format(x_path_tree))
+            print('开始查询第{}页数据，当前页共计{}条数据'.format(select_page + 1, len(search_result_tree)))
+            for num in range(len(search_result_tree)-18):
+                x_path = '//a[contains(@class,"name select-none")]'
+                item = search_result_tree[num].find_elements_by_xpath(x_path)
+                if len(item) == 0:
+                    x_path = '//a[contains(@class,"name ")]'
+                    item = search_result_tree[num].find_elements_by_xpath(x_path)
+                # 这里总共有三种实现方式
+                # WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, x_path)))
+                driver.execute_script("arguments[0].scrollIntoView(true);", item[num])  # 定位当前链接
+                # driver.execute_script("document.documentElement.scrollTop=100000")
+                ActionChains(driver).move_to_element(item[num]).perform()
+                href_get = item[num].get_attribute('href')
+                driver.execute_script("window.open('{}')".format(href_get))
+                # item[num].click()
+                driver.switch_to.window(driver.window_handles[1])
+                code_list = []
+
+                WebDriverWait(driver, 10).until(EC.element_to_be_clickable(
+                    (By.XPATH, '//h1[contains(@class,"name")]')))
+                code_name = driver.find_element_by_xpath('//h1[contains(@class,"name")]').text
+                code_list.append(code_name)
+                try:
+                    code_code = driver.find_element_by_xpath(
+                        '//*[@id="_container_baseInfo"]/table[2]/tbody/tr[3]/td[2]').text
+                    code_list.append(code_code)
+                    registered_capital = driver.find_element_by_xpath(
+                        '//*[@id="_container_baseInfo"]/table[2]/tbody/tr[1]/td[2]/div').get_attribute('title')
+                    code_list.append(registered_capital)
+                    registration_number = driver.find_element_by_xpath(
+                        '//*[@id="_container_baseInfo"]/table[2]/tbody/tr[2]/td[4]').text
+                    code_list.append(registration_number)
+                    organization_code = driver.find_element_by_xpath(
+                        '//*[@id="_container_baseInfo"]/table[2]/tbody/tr[3]/td[4]').text
+                    code_list.append(organization_code)
+                    address = driver.find_element_by_xpath(
+                        '//*[@id="_container_baseInfo"]/table[2]/tbody/tr[10]/td[2]').text
+                    code_list.append(address)
+                    industry = driver.find_element_by_xpath(
+                        '//*[@id="_container_baseInfo"]/table[2]/tbody/tr[5]/td[4]').text
+                    code_list.append(industry)
+                    code_result.append(code_list)
+                except NoSuchElementException:
+                    print('未找到[{}]相关信息，自动跳过'.format(code_name))
+                    pass
+                driver.close()
+                driver.switch_to.window(driver.window_handles[0])
+                print(code_list)
+            if page_num == select_page + 1:
+                break
+            else:
+                page = driver.find_element_by_css_selector(
+                    '#web-content > div > div.container-left > div.search-block > '
+                    'div.result-footer > div:nth-child(1) > ul > li:nth-child(%s) '
+                    '> a' % (select_page + 2))
+                page.click()
+                time.sleep(3)
+        print('查询结束，总计{}页'.format(page_num))
+    except TimeoutException:
+        print('抓取中断，尝试重新登录')
+        if except_check.count() >= 5:
+            print('异常次数超限，请检查参数')
+            driver.quit()
+            return 0
+        if len(driver.window_handles) > 0:
             driver.close()
             driver.switch_to.window(driver.window_handles[0])
-            print(code_list)
-        if page_num == select_page + 1:
-            break
+        get_code()
+    except NoSuchElementException:
+        if is_exist_element('//*[@id="hideSearching"]/div/img'):
+            print('关键字有误，请检查页面提示信息')
         else:
-            page = driver.find_element_by_css_selector('#web-content > div > div.container-left > div.search-block > '
-                                                       'div.result-footer > div:nth-child(1) > ul > li:nth-child(%s) '
-                                                       '> a' % (select_page + 2))
-            page.click()
-            time.sleep(3)
-    print('查询结束，总计%s页' % page_num)
+            print('抓取元素失败')
+        time.sleep(5)
+        driver.quit()
 
 
 # 登录
@@ -297,10 +357,13 @@ def login(value_key=''):
             if is_exist_element('//*[@id="web-content"]/div/div[1]/div[2]/div[4]/div'):
                 verify_check = False
             else:
-                driver.find_element_by_xpath('/html/body/div[10]/div[2]/div[2]/div[1]/div[3]/a[1]').click()
-                ActionChains(driver).click(slideblock).perform()
-                time.sleep(3)
-                continue
+                try:
+                    driver.find_element_by_xpath('/html/body/div[10]/div[2]/div[2]/div[1]/div[3]/a[1]').click()
+                    ActionChains(driver).click(slideblock).perform()
+                    time.sleep(3)
+                    continue
+                except NoSuchElementException:
+                    verify_check = False
     time.sleep(3)
 
 
@@ -312,10 +375,15 @@ def main(key='证券', page=1, path='./output_file/Code_data.xls'):
 
 
 if __name__ == '__main__':
+    except_check = Counter()
     sys.stdout = Logger('./log/抓取信用代码证日志.log')
     driver = webdriver.Chrome(executable_path=r"D:\Software\ChromePortable\chromedriver.exe")
     driver.implicitly_wait(10)
+    driver.minimize_window()
+    # driver.execute_script("var result = prompt('请输入查询关键字');"
+    #                       "window.open('https://www.tianyancha.com/search?key='+ result)")
+    key_value = input("请输入想查询的关键字：")
     code_result = []
-    main('证券', 2)
+    main(key_value, 2)
     # driver.execute_script("window.alert('执行完毕')")
     driver.quit()

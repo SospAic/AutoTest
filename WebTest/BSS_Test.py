@@ -137,7 +137,7 @@ def customer_manager():
             driver.find_element_by_xpath('/html/body/div[7]/div[3]/button[1]').click()
             """当前客户信息"""
             cust_name = driver.find_element_by_name('custName').get_attribute('value')
-            print('当前客户名称为：' + cust_name + '，统一信用代码证为：' + str(code_input))
+            print('当前客户名称为：{}，统一信用代码证为：{}'.format(cust_name, str(code_input)))
             '''基本信息'''
             driver.find_element_by_xpath('//*[@id="custInfoForm"]/div[2]/div[1]/div/div/div/input').click()
             # driver.execute_script('document.getElementsByClassName("ztree")[0].scrollBottom=99999')
