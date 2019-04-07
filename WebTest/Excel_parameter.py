@@ -7,7 +7,7 @@ import time
 import xlrd
 
 
-def open_excel(file='file.xls'):  # 打开要解析的Excel文件
+def open_excel(file='./input_file/参数列表.xls'):  # 打开要解析的Excel文件
     try:
         data = xlrd.open_workbook(file)
         return data
@@ -15,7 +15,7 @@ def open_excel(file='file.xls'):  # 打开要解析的Excel文件
         print(e)
 
 
-def excel_by_index(file='file.xls', colindex=0, by_index=0):  # 按表的索引读取
+def excel_by_index(file='./input_file/参数列表.xls', colindex=0, by_index=0):  # 按表的索引读取
     data = open_excel(file)  # 打开excel文件
     tab = data.sheets()[by_index]  # 选择excel里面的Sheet
     n_rows = tab.nrows  # 行数
