@@ -6,7 +6,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 def main():
     driver.find_element_by_id('loginUserCode').send_keys('superadmin')
-    driver.find_element_by_id('loginPassword').send_keys('aas_1122')
+    driver.find_element_by_id('loginPassword').send_keys('bss!1122')
     driver.find_element_by_name('verifyCode').click()
     print('请输入验证码')
     time.sleep(10)
@@ -25,7 +25,7 @@ def main():
 
 if __name__ == '__main__':
     driver = webdriver.Chrome(executable_path=r"D:\Software\ChromePortable\chromedriver.exe")  # Chrome配置参数
-    driver.get('http://10.124.156.55/portal-web/index.jsp')
+    driver.get('http://10.124.166.82/portal-web/index.jsp')
     print('打开页面')
     driver.implicitly_wait(10)
     driver.maximize_window()
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     cookies = driver.get_cookies()
     f1 = open('./input_file/cookie.txt', 'w')
     f1.write(json.dumps(cookies))
-    f1.close
+    f1.close()
     print(cookies)
     print('获取成功，正在退出')
     time.sleep(2)

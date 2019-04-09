@@ -130,7 +130,7 @@ def customer_manager():
             '''获取客户信息'''
             driver.find_element_by_xpath('//*[@id="baseinfo-panel"]/div[1]/form/div[1]/div[1]/div/div[1]/div').click()
             driver.find_element_by_xpath('//li[contains(text(),"统一社会信用代码证书")]').click()
-            driver.find_element_by_xpath('//*[@id="baseinfo-panel"]/div[1]/form/div[1]/div[2]/div/div[1]/input').send_keys(code_input)
+            driver.find_element_by_xpath('//*[@id="baseinfo-panel"]/div[1]/form/div[1]/div/div/div[3]/input').send_keys(code_input)
             driver.find_element_by_xpath('//button[contains(text(),"获取")]').click()
             driver.find_element_by_xpath('//*[@id="jqg1"]').click()
             driver.find_element_by_xpath('/html/body/div[6]/div[3]/button[1]').click()
@@ -220,7 +220,7 @@ def customer_manager():
 
 
 def main():
-    driver.get('http://10.124.156.55/portal-web/index.jsp')
+    driver.get('http://10.124.166.82/portal-web/index.jsp')
     print('打开页面')
     driver.implicitly_wait(10)
     driver.maximize_window()
@@ -229,7 +229,7 @@ def main():
     get_auth_code.authCodeText = get_auth_code(driver, get_auth_code.imgElement)
     print('验证码为：' + get_auth_code.authCodeText)
     print('正在登录')
-    sys_login(driver, '涉密未填写', '涉密未填写', get_auth_code.authCodeText)
+    sys_login(driver, 'superadmin', 'bss!1122', get_auth_code.authCodeText)
 
 
 class Logger(object):  # Log日志记录
