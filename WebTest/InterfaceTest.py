@@ -10,6 +10,7 @@ import xlrd
 import re
 import time
 import xlwt
+import traceback
 from PIL import Image
 from xlutils3.copy import copy
 
@@ -43,7 +44,8 @@ class MySQL:
             # print(execute_results)  # 输出查询结果
             return execute_results
         except:
-            print('未查询到指定数据，请检查SQL语句')
+            print('未查询到指定数据，请检查SQL语句，错误详情：')
+            traceback.print_exc()
             pass
         # self.db.close()  # 关闭数据库连接
 
@@ -69,11 +71,12 @@ class MySQL:
                     column_add[index[c][0]] = row[c]
                     # print(index[c][0], row[c])
                 column_information.append(column_add)
-            print(column_information)  # 展示所有信息
+            # print(column_information)  # 展示所有信息
             # self.db.close()  # 关闭数据库连接
             return column_information
         except:
-            print('未查询到字段信息，请检查SQL语句')
+            print('未查询到字段信息，请检查SQL语句，错误详情：')
+            traceback.print_exc()
             pass
 
 
@@ -112,6 +115,7 @@ def str_to_dict(cookie):
 # Get/Post 请求
 def request_get(url_add, method='post', request_data=None):
     try:
+        # 调试模式，范文
         headers = {
             'POST /cust-web/cust/CustInfoController/qryCustInfoList.do HTTP/1.1'
             'Host': '10.124.146.175',
@@ -132,19 +136,30 @@ def request_get(url_add, method='post', request_data=None):
             'Accept-Encoding': 'gzip, deflate',
             'Accept-Language': 'zh-CN',
         }
+        # 简化模式，初次登录须校验，添加反爬
+        headers1 = {'Content-Type': 'application/json;charset=UTF-8',
+                    'Referer': url_add}
         if method == 'get':
-            rs = s.get(url_add, headers=headers, param=request_data, timeout=5)  # 加入超时限制
+            rs = s.get(url_add, params=request_data, timeout=5)  # 加入超时限制
             # print(rs.text)
         else:
-            rs = s.post(url_add, headers=headers, data=request_data, timeout=5)  # 加入超时限制
+            # rs = s.post(url_add, headers=headers, data=request_data, timeout=5)  # 加入超时限制
+            cookies = s.cookies.get_dict()
+            rs = s.post(url_add, headers=headers1, data=request_data, cookies=cookies, timeout=5)
             # print(rs.text)
-        print('返回码：{}'.format(rs.status_code))
+        print('返回状态码：{}'.format(rs.status_code))
         return rs
     except requests.exceptions.ConnectTimeout:
-        print('连接超时，错误详情：{}'.format(requests.exceptions.ConnectTimeout.errno))
+        print('连接超时，错误详情：')
+        traceback.print_exc()
         pass
     except requests.exceptions.ReadTimeout:
-        print('读取超时，请检查网络，错误详情：\n{}'.format(requests.exceptions.ReadTimeout.errno))
+        print('读取超时，请检查网络，错误详情：')
+        traceback.print_exc()
+        pass
+    except requests.exceptions.ConnectionError:
+        print('连接拒绝，请检查网络，错误详情：')
+        traceback.print_exc()
         pass
 
 
@@ -267,7 +282,7 @@ class Excel:
                 if row == 2 or row == 3:  # 请求和返回值过长，设固定值
                     sheet.col(row).width = 6000
                 elif row == 13:
-                    sheet.col(row).width = 13000
+                    sheet.col(row).width = 15000
                 else:
                     if data_length_index > 10:
                         width = int(256 * (data_length_index + 1) * 1.3)
@@ -301,6 +316,7 @@ def run_test(url, method, param, expect=None, sql_server=None, sql_account=None,
         test_result['预期返回值'] = expect
         test_result['返回码'] = req.status_code
         test_result['说明'] = ' '
+        test_result['是否通过'] = '未通过'
         try:  # 预期返回值判断
             pass_check = test_result['预期返回值'].split('=')
             pass_code = '"{}":"{}"'.format(pass_check[0], pass_check[1])
@@ -308,22 +324,24 @@ def run_test(url, method, param, expect=None, sql_server=None, sql_account=None,
             if search is not None:
                 test_result['实际返回值'] = pass_code
                 test_result['是否通过'] = '通过'
-                test_result['说明'] = 'request校验'
+                test_result['说明'] = '状态码+request校验'.strip()
             else:
                 text = r'"{}":"'.format(pass_check[0])
                 show_text = re.search(r'{}(\d)"'.format(text), req.text, re.I)
                 test_result['实际返回值'] = show_text.group(0)
                 test_result['是否通过'] = '未通过'
-                test_result['说明'] = 'request校验'
+                test_result['说明'] = '状态码+request校验'
         except IndexError:
             print('预期返回值为空?请检查')
             test_result['预期返回值'] = '空'
             test_result['实际返回值'] = '空'
+            test_result['说明'] = '状态码+request校验'
             pass
         except AttributeError:
             print('预期返回值为空?请检查')
             test_result['预期返回值'] = '空'
             test_result['实际返回值'] = '空'
+            test_result['说明'] = '状态码+request校验'
             pass
         # 判断含有数据库信息的接口入参
         if sql_server and sql_account and sql_pwd and sql_schema and sql_execute is not None:
@@ -393,6 +411,10 @@ def run_test(url, method, param, expect=None, sql_server=None, sql_account=None,
                 print('字段限制无法校验，跳过')
                 test_result['对比结果'] = '无'
                 pass
+            except AttributeError:
+                print('字段限制无匹配结果，跳过')
+                test_result['对比结果'] = '无'
+                pass
         else:
             print('无对比参数，跳过')
             test_result['对比参数'] = '空'
@@ -401,7 +423,9 @@ def run_test(url, method, param, expect=None, sql_server=None, sql_account=None,
         # print(test_result)
         run_results.append(test_result)
     except TypeError:
-        print(TypeError)
+        traceback.print_exc()
+    except AttributeError:
+        traceback.print_exc()
     return run_results
 
 
@@ -428,5 +452,7 @@ if __name__ == '__main__':
     s = requests.session()
     excel = Excel()
     run_results = []
-    # login_check('http://10.124.156.55/portal-web/index.jsp')
+    # login_check('http://10.124.156.55/portal-web/index.jsp')  # 测试环境校验
+    # login_check('http://10.124.166.82/portal-web/index.jsp') # 准生产环境校验
+    # login_check('http://10.124.166.77/portal-web/index.jsp') # 生产环境校验
     testcase_list()

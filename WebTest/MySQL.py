@@ -29,13 +29,14 @@ class MySQLConnect:
 
 
 if __name__ == '__main__':
-    sql = MySQLConnect()
-    sql.sql_execute("SELECT * FROM tf_f_cust_group where cust_id = 16")
-    sql.sql_execute("SELECT t.column_name '字段名',"
-                    "t.COLUMN_TYPE '数据类型',"
-                    "t.IS_NULLABLE '可为空',"
-                    "t.COLUMN_KEY '主键',"
-                    "t.COLUMN_DEFAULT '默认值',"
-                    "t.COLUMN_COMMENT '注释'"
-                    " FROM information_schema.COLUMNS t WHERE table_schema = 'hj_test_cust' AND table_name = 'tf_f_cust_group'")
+    hj_test_cust = MySQLConnect(host="10.124.147.173", name="hj_test_cust", pwd="Test3333", table="hj_test_cust")
+    hj_test_ulog = MySQLConnect(host="10.124.147.173", name="hj_test_ulog", pwd="Test3333", table="hj_test_ulog")
+    hj_test_portal = MySQLConnect(host="10.124.147.173", name="hj_test_portal", pwd="Test3333", table="hj_test_portal")
+    hj_pre_cust = MySQLConnect(host="10.124.147.23", name="hj_pre_cust", pwd="zte_1234", table="hj_pre_cust")
+    hj_pre_portal = MySQLConnect(host="10.124.147.23", name="hj_pre_portal", pwd="Test3333", table="hj_pre_portal")
+    hj_test_cust.sql_execute("SELECT * FROM tf_f_cust_group where cust_id=3019040314013175")
+    # hj_test_cust.sql_execute("show rule from tf_f_cust_group")
+    hj_test_ulog.sql_execute('''select a.REQ_JSON,a.RESP_JSON,a.LOG_TIME from operation_log a 
+where class_name="com.ztesoft.bss.cust_capacity.wsdl.endpoint.CUSBUCUGrpAccountSerEndpoint" and a.method_name="crtGrpAccountInfo"
+and a.LOG_TIME BETWEEN '2019-04-04 00:00:00'  and  '2019-04-05 18:00:00';''')
 
