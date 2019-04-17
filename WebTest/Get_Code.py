@@ -163,12 +163,12 @@ def excel_create(file_path):
         """设置单元格宽度"""
         if data_length_index > 10:
             sheet.col(row).width = 256 * (data_length_index + 1)
-        print('列名共{}条,正在添加\t{}'.format(str(len(table_top_list)), write_data))
+        print('列名共{0:>2}条,正在添加：{1}'.format(str(len(table_top_list)), write_data))
     # 写入内容
     print('开始写入数据')
     for col in range(len(code_result)):
         write_data = code_result[col]
-        print('共计{}条数据，当前为{}条，企业名称为\t{}'.format(len(code_result), col + 1, write_data[0]))
+        print('共计{0:>3}条数据，当前为{1:>3}条，企业名称为：{2}'.format(len(code_result), col + 1, write_data[0]))
         for row in range(len(code_result[col])):
             sheet.write(col + 1, row, write_data[row], style1)
             data_length_index = len(write_data[row].encode('utf-8'))  # 获取当前Unicode字符串长度
@@ -191,7 +191,7 @@ def get_code(page_num=1):
             x_path_tree = '//div[contains(@class,"result-list sv-search-container")]'
             search_result_tree = driver.find_elements_by_xpath('{}/div'.format(x_path_tree))
             print('开始查询第{}页数据，当前页共计{}条数据'.format(select_page + 1, len(search_result_tree)))
-            for num in range(len(search_result_tree)-18):
+            for num in range(len(search_result_tree)):
                 x_path = '//a[contains(@class,"name select-none")]'
                 item = search_result_tree[num].find_elements_by_xpath(x_path)
                 if len(item) == 0:
@@ -380,10 +380,12 @@ if __name__ == '__main__':
     driver = webdriver.Chrome(executable_path=r"D:\Software\ChromePortable\chromedriver.exe")
     driver.implicitly_wait(10)
     driver.minimize_window()
+    code_result = []
     # driver.execute_script("var result = prompt('请输入查询关键字');"
     #                       "window.open('https://www.tianyancha.com/search?key='+ result)")
     key_value = input("请输入想查询的关键字：")
-    code_result = []
-    main(key_value, 2)
+    page_value = input("请输入想查询的页数：")
+    page_value = int(page_value)
+    main(key_value, page_value)
     # driver.execute_script("window.alert('执行完毕')")
     driver.quit()

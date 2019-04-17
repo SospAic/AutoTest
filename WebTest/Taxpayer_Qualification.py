@@ -118,12 +118,10 @@ def taxpayer_create(runtime):
     """纳税人资质创建创建"""
     for num in range(runtime):
         try:
-            time.sleep(5)
             custumer_click = driver.find_element_by_xpath("//a[contains(@menu_name,'客户中心')]")
             ActionChains(driver).move_to_element(custumer_click).perform()
             third_menu = driver.find_elements_by_xpath('//*[@id="thirdMenuInfo"]/li')
             third_menu[10].click()
-            time.sleep(5)
             driver.switch_to.frame("2511Iframe")
             # 调试
             # driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div[2]/div/div/div[2]/button[1]').click()
@@ -230,6 +228,7 @@ def main():
     print('验证码为：' + get_auth_code.authCodeText)
     print('正在登录')
     sys_login(driver, 'superadmin', 'bss!1122', get_auth_code.authCodeText)
+    taxpayer_create(runtime)
 
 
 class Logger(object):  # Log日志记录
@@ -254,6 +253,5 @@ if __name__ == '__main__':
     runtime = input('请输入要添加多少条数据：')
     runtime = int(runtime)
     main()
-    taxpayer_create(runtime)
     # driver.execute_script("window.alert('Selenium执行完毕')")
     # driver.quit()
