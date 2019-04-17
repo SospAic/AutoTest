@@ -179,7 +179,7 @@ def customer_manager():
             # driver.execute_script("document.getElementById('busiLicenseInfo_certFile_filefield').click()")
             '''上传开户证件图像'''
             driver.find_element_by_xpath('//*[@id="creditCertiForm"]/div[4]/div[1]/div/div/div/span[1]/input').click()
-            os.system(r'./other/autoupdate.exe')  # 调用外部Auto_it Script进行功能实现
+            os.system(r'.\\other\\autoupdate.exe')  # 调用外部Auto_it Script进行功能实现
             time.sleep(5)
             '''客户经理信息'''
             # driver.find_element_by_xpath('//*[@id="baseinfo-panel"]/div[5]/div[1]/div/button').click()
