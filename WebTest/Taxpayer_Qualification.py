@@ -55,7 +55,7 @@ def sys_login(driver, account, passwd, authCode):
     driver.find_element_by_name('verifyCode').clear()
     driver.find_element_by_id('loginUserCode').send_keys(account)
     driver.find_element_by_id('loginPassword').send_keys(passwd)
-    driver.find_element_by_name('verifyCode').send_keys(authCode)
+    driver.find_element_by_name('verifyCode').send_keys('abcd')  # 调试后修改回authCode
     driver.find_element_by_xpath('//button[contains(text(),"新版集中集客")]').click()
     """验证是否登录成功"""
     try:
@@ -122,6 +122,7 @@ def taxpayer_create(runtime):
             ActionChains(driver).move_to_element(custumer_click).perform()
             third_menu = driver.find_elements_by_xpath('//*[@id="thirdMenuInfo"]/li')
             third_menu[10].click()
+            time.sleep(5)
             driver.switch_to.frame("2511Iframe")
             # 调试
             # driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div[2]/div/div/div[2]/button[1]').click()
@@ -129,7 +130,7 @@ def taxpayer_create(runtime):
             """输入参数"""
             sendran = random.randint(100, 999)
             name_list = ['赵一', '王二', '张三', '李四', '周五']
-            sendname = random.randint(0, (len(name_list)) - 1)
+            sendname = random.choice(name_list)
             '''纳税人资质信息'''
             driver.find_element_by_xpath('//*[@id="app"]/div/div/div[3]/div[1]/div/button').click()
             tax_num = '91234567890123{}'.format(sendran)
@@ -180,12 +181,27 @@ def taxpayer_create(runtime):
             list_select[0].find_element_by_xpath('//button[text()="提交审核"]').click()
             driver.find_element_by_xpath('/html/body/div[3]/div[3]/button[1]').click()
             driver.find_element_by_xpath('/html/body/div[2]/div[3]/button').click()
+            driver.find_element_by_xpath('//a[text()="发票领取人信息"]').click()
+            driver.find_element_by_xpath('//*[@id="ui-id-4"]/div[1]/button').click()
+            driver.find_element_by_name('getInvioceName').send_keys(sendname)
+            driver.find_element_by_name('getInvioceCell').send_keys(tax_cellnumber)
+            driver.find_element_by_xpath('/html/body/div[3]/div[2]/form/div[3]/div/div/div').click()
+            driver.find_element_by_xpath('/html/body/ul/li[1]').click()
+            driver.find_element_by_name('getCertNum').send_keys('110101196004017593')
+            driver.find_element_by_xpath('/html/body/div[3]/div[2]/form/div[5]/div/div/div/input').click()
+            driver.find_element_by_xpath('//*[@id="ui-id-9_1_switch"]').click()
+            driver.find_element_by_xpath('//*[@id="ui-id-9_342_switch"]').click()
+            driver.find_element_by_xpath('//*[@id="ui-id-9_343_span"]').click()
+            driver.find_element_by_name('getInvioceAdd').send_keys(tax_address)
+            driver.find_element_by_xpath('/html/body/div[3]/div[3]/button[1]').click()
+            driver.find_element_by_xpath('/html/body/div[5]/div[3]/button').click()
             driver.refresh()
-            time.sleep(5)
+            time.sleep(2)
+            """处理待办"""
             todo_click = driver.find_element_by_xpath("//a[contains(@menu_name,'系统管理')]")
             ActionChains(driver).move_to_element(todo_click).perform()
             driver.find_element_by_xpath('//span[@title="待办/待阅管理"]').click()
-            time.sleep(5)
+            time.sleep(2)
             todo_list = driver.find_elements_by_xpath('//tr[@class="jqgrow row-striped"]')
             todo_list[0].find_element_by_xpath('//span[text()="处理"]').click()
             driver.switch_to.frame(driver.find_element_by_tag_name("iframe"))
@@ -214,7 +230,6 @@ def taxpayer_create(runtime):
         print('继续添加下一条，当前时间为：' + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
         driver.refresh()
     print('所有数据已创建完毕')
-    driver.quit()
 
 
 def main():
@@ -254,4 +269,4 @@ if __name__ == '__main__':
     runtime = int(runtime)
     main()
     # driver.execute_script("window.alert('Selenium执行完毕')")
-    # driver.quit()
+    driver.quit()

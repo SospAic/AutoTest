@@ -207,7 +207,6 @@ def get_code(page_num=1):
                 # item[num].click()
                 driver.switch_to.window(driver.window_handles[1])
                 code_list = []
-
                 WebDriverWait(driver, 10).until(EC.element_to_be_clickable(
                     (By.XPATH, '//h1[contains(@class,"name")]')))
                 code_name = driver.find_element_by_xpath('//h1[contains(@class,"name")]').text

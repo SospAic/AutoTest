@@ -58,7 +58,7 @@ def interference_point(img, img_name, x=0, y=0):
     :return:
     """
     filename = './out_img/' + img_name.split('.')[0] + '-interferencePoint.jpg'
-    # todo 判断图片的长宽度下限
+    # 判断图片的长宽度下限
     cur_pixel = img[x, y]  # 当前像素点的值
     height, width = img.shape[:2]
 

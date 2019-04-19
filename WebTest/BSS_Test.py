@@ -216,7 +216,6 @@ def customer_manager():
         print('继续添加下一条，当前时间为：' + time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
         driver.refresh()
     print('所有数据已创建完毕')
-    driver.quit()
 
 
 def main():
@@ -252,4 +251,4 @@ if __name__ == '__main__':
     sys.stdout = Logger('./log/客户创建日志.log')
     main()
     # driver.execute_script("window.alert('Selenium执行完毕')")
-    # driver.quit()
+    driver.quit()
