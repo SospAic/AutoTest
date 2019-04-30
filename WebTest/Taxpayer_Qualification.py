@@ -233,7 +233,7 @@ def taxpayer_create(runtime):
 
 
 def main():
-    driver.get('http://10.124.166.82/portal-web/index.jsp')
+    driver.get('http://10.124.156.55/portal-web/index.jsp')
     print('打开页面')
     driver.implicitly_wait(10)
     driver.maximize_window()
@@ -242,7 +242,7 @@ def main():
     get_auth_code.authCodeText = get_auth_code(driver, get_auth_code.imgElement)
     print('验证码为：' + get_auth_code.authCodeText)
     print('正在登录')
-    sys_login(driver, 'superadmin', 'bss!1122', get_auth_code.authCodeText)
+    sys_login(driver, 'admin', 'abc@123', get_auth_code.authCodeText)
     taxpayer_create(runtime)
 
 

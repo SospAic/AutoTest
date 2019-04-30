@@ -18,4 +18,6 @@ def get_pic(runtime=1):
 
 
 if __name__ == '__main__':
-    get_pic(20)
+    get_code = input('请输入要抓取的图片数量：')
+    get_code = int(get_code)
+    get_pic(get_code)

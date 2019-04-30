@@ -139,11 +139,17 @@ def customer_manager():
             cust_name = driver.find_element_by_name('custName').get_attribute('value')
             print('当前客户名称为：{}，统一信用代码证为：{}'.format(cust_name, str(code_input)))
             '''基本信息'''
-            driver.find_element_by_xpath('//*[@id="custInfoForm"]/div[2]/div[1]/div/div/div/input').click()
-            # driver.execute_script('document.getElementsByClassName("ztree")[0].scrollBottom=99999')
-            # driver.find_element_by_id('ui-id-40_1_switch').click()
-            # driver.find_element_by_id('ui-id-40_2_switch').click()
-            driver.find_element_by_id('ui-id-40_68_span').click()
+            driver.find_element_by_xpath('//*[@id="custInfoForm"]/div[2]/div[1]/div/div/div/div[2]/input').click()
+            time.sleep(1)
+            driver.execute_script('document.getElementsByClassName("ztree")[0].scrollBottom=99999')
+            # 贵阳市区
+            driver.find_element_by_id('ui-id-33_81_switch').click()
+            driver.find_element_by_id('ui-id-33_89_switch').click()
+            driver.find_element_by_id('ui-id-33_626_span').click()
+            # 哈尔滨市区
+            # driver.find_element_by_id('ui-id-33_360_switch').click()
+            # driver.find_element_by_id('ui-id-33_361_switch').click()
+            # driver.find_element_by_id('ui-id-33_538_span').click()
             time.sleep(1)
             if is_exist_element('/html/body/div[5]/div[2]/div'):
                 print(str(driver.find_element_by_xpath('/html/body/div[5]/div[2]/div').text) + '，已自动跳过')
@@ -175,7 +181,7 @@ def customer_manager():
             if is_exist_element('/html/body/div[7]/div[2]/div', '未通过'):
                 print(driver.find_element_by_xpath('/html/body/div[7]/div[2]/div').text)
                 break
-            driver.find_element_by_xpath('/html/body/div[6]/div[3]/button').click()
+            driver.find_element_by_xpath('/html/body/div[7]/div[3]/button').click()
             # driver.execute_script("document.getElementById('busiLicenseInfo_certFile_filefield').click()")
             '''上传开户证件图像'''
             driver.find_element_by_xpath('//*[@id="creditCertiForm"]/div[4]/div[1]/div/div/div/span[1]/input').click()
@@ -219,7 +225,7 @@ def customer_manager():
 
 
 def main():
-    driver.get('http://10.124.166.82/portal-web/index.jsp')
+    driver.get('http://10.124.156.55/portal-web/index.jsp')
     print('打开页面')
     driver.implicitly_wait(10)
     driver.maximize_window()
@@ -228,7 +234,7 @@ def main():
     get_auth_code.authCodeText = get_auth_code(driver, get_auth_code.imgElement)
     print('验证码为：' + get_auth_code.authCodeText)
     print('正在登录')
-    sys_login(driver, 'superadmin', 'bss!1122', get_auth_code.authCodeText)
+    sys_login(driver, 'admin', 'abc@123', get_auth_code.authCodeText)
 
 
 class Logger(object):  # Log日志记录
