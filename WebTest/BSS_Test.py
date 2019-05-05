@@ -5,11 +5,46 @@ import random
 import os
 import sys
 import json
+import xlrd
 from selenium import webdriver
 from PIL import Image, ImageEnhance
 from selenium.common.exceptions import *
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
+
+
+# 通过TXT文件导入创建
+def code_read(filename='./input_file/Code_list.txt'):
+    """加载组织机构代码证列表"""
+    f = open(filename)
+    code_list = []
+    for line in f.readlines():
+        cur_line = line.strip().split()
+        code_list.append(cur_line)
+    return code_list
+
+
+def open_excel(file='./output_file/Code_data.xls'):  # 打开要解析的Excel文件
+    try:
+        data = xlrd.open_workbook(file)
+        return data
+    except Exception as e:
+        print(e)
+
+
+# 通过抓取的统一社会信用代码证创建
+def excel_by_index(file='./output_file/Code_data.xls', by_index=0):  # 按表的索引读取
+    data = open_excel(file)  # 打开excel文件
+    tab = data.sheets()[by_index]  # 选择excel里面的Sheet
+    n_rows = tab.nrows  # 行数
+    list_create = []  # 创建一个空列表
+    for x in range(1, n_rows):  # 第一行为标题（第一行为0），所以从第二行开始
+        row = tab.row_values(x, start_colx=1, end_colx=2)
+        if row[0] is '-' or None:  # 判断空白或占位符
+            continue
+        else:
+            list_create.append(row[0])
+    return list_create
 
 
 def get_auth_code(driver, codeEelement):
@@ -24,16 +59,6 @@ def get_auth_code(driver, codeEelement):
     authcodeImg = Image.open('./pic_code/authcode.png')
     authCodeText = pytesseract.image_to_string(authcodeImg).strip()
     return authCodeText
-
-
-def code_read(filename='./input_file/Code_list.txt'):
-    """加载组织机构代码证列表"""
-    f = open(filename)
-    code_list = []
-    for line in f.readlines():
-        cur_line = line.strip().split()
-        code_list.append(cur_line)
-    return code_list
 
 
 def is_exist_element(elem, code='已存在'):
@@ -114,7 +139,7 @@ def sys_login(driver, account, passwd, authCode):
 
 def customer_manager():
     """客户资料创建"""
-    for code_input in code_read():
+    for code_input in excel_by_index():  # code_read():
         try:
             custumer_click = driver.find_element_by_xpath("//a[contains(@menu_name,'客户中心')]")
             ActionChains(driver).move_to_element(custumer_click).perform()
@@ -169,11 +194,11 @@ def customer_manager():
             '''经办人信息'''
             driver.find_element_by_name('transactorName').send_keys('吴延华')
             driver.find_element_by_xpath('//*[@id="transactorForm"]/div[1]/div[2]/div/div/div').click()
-            ActionChains(driver).send_keys(Keys.DOWN).perform()
-            time.sleep(1)
-            ActionChains(driver).click(on_element=None).perform()
-            time.sleep(1)
-            # driver.find_element_by_xpath('//*[@id="transactorForm"]/div[1]/div[2]/div/div/div/span[1]').click()
+            # ActionChains(driver).send_keys(Keys.DOWN).perform()
+            # time.sleep(1)
+            # ActionChains(driver).click(on_element=None).perform()
+            # time.sleep(1)
+            a = driver.find_element_by_xpath('//li[contains(text(),"身份证18位")]').click()
             driver.find_element_by_name("certiAddr").send_keys('这是一条测试地址' + str(sendran))
             driver.find_element_by_name("phone").send_keys('16666666666' + str(sendran))
             driver.find_element_by_name("certiCode").send_keys('371523199206055312')
@@ -181,7 +206,7 @@ def customer_manager():
             if is_exist_element('/html/body/div[7]/div[2]/div', '未通过'):
                 print(driver.find_element_by_xpath('/html/body/div[7]/div[2]/div').text)
                 break
-            driver.find_element_by_xpath('/html/body/div[7]/div[3]/button').click()
+            driver.find_element_by_xpath('/html/body/div[6]/div[3]/button').click()
             # driver.execute_script("document.getElementById('busiLicenseInfo_certFile_filefield').click()")
             '''上传开户证件图像'''
             driver.find_element_by_xpath('//*[@id="creditCertiForm"]/div[4]/div[1]/div/div/div/span[1]/input').click()
