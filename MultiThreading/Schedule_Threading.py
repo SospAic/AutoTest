@@ -13,9 +13,10 @@ def main(method):
     schedule.every(5).to(10).days.do(job, method)  # 每隔5到10天执行一次任务
     schedule.every().monday.do(job, method)  # 每周一的这个时候执行一次任务
     schedule.every().wednesday.at("13:15").do(job, method)  # 每周三13:15执行一次任务
-
-
-if __name__ == '__main__':
     while True:
         schedule.run_pending()  # 运行所有可以运行的任务
         time.sleep(1)
+
+
+if __name__ == '__main__':
+    main(':D')
