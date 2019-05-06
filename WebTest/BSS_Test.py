@@ -6,6 +6,7 @@ import os
 import sys
 import json
 import xlrd
+import traceback
 from selenium import webdriver
 from PIL import Image, ImageEnhance
 from selenium.common.exceptions import *
@@ -13,9 +14,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
 
 
-# 通过TXT文件导入创建
 def code_read(filename='./input_file/Code_list.txt'):
-    """加载组织机构代码证列表"""
+    """通过TXT文件加载组织机构代码证列表"""
     f = open(filename)
     code_list = []
     for line in f.readlines():
@@ -32,8 +32,8 @@ def open_excel(file='./output_file/Code_data.xls'):  # 打开要解析的Excel�
         print(e)
 
 
-# 通过抓取的统一社会信用代码证创建
 def excel_by_index(file='./output_file/Code_data.xls', by_index=0):  # 按表的索引读取
+    """通过抓取的统一社会信用代码证创建"""
     data = open_excel(file)  # 打开excel文件
     tab = data.sheets()[by_index]  # 选择excel里面的Sheet
     n_rows = tab.nrows  # 行数
@@ -65,7 +65,7 @@ def is_exist_element(elem, code='已存在'):
     """判断元素是否存在"""
     try:
         s = driver.find_element_by_xpath(elem)
-        if str(s.text).find(code):
+        if code in str(s.text):
             return True
     except NoSuchElementException:
         return False
@@ -157,20 +157,26 @@ def customer_manager():
             driver.find_element_by_xpath('//li[contains(text(),"统一社会信用代码证书")]').click()
             driver.find_element_by_xpath('//*[@id="baseinfo-panel"]/div[1]/form/div[1]/div/div/div[3]/input').send_keys(code_input)
             driver.find_element_by_xpath('//button[contains(text(),"获取")]').click()
+            if is_exist_element('/html/body/div[6]/div[2]/div', '未能正确获取'):
+                warning = driver.find_element_by_xpath('/html/body/div[6]/div[2]/div').text
+                print(warning)
+                driver.find_element_by_xpath('/html/body/div[6]/div[3]/button').click()
+                driver.refresh()
+                continue
             driver.find_element_by_xpath('//*[@id="jqg1"]').click()
             driver.find_element_by_xpath('/html/body/div[6]/div[3]/button[1]').click()
             driver.find_element_by_xpath('/html/body/div[7]/div[3]/button[1]').click()
             """当前客户信息"""
             cust_name = driver.find_element_by_name('custName').get_attribute('value')
             print('当前客户名称为：{}，统一信用代码证为：{}'.format(cust_name, str(code_input)))
-            '''基本信息'''
+            """基本信息"""
             driver.find_element_by_xpath('//*[@id="custInfoForm"]/div[2]/div[1]/div/div/div/div[2]/input').click()
             time.sleep(1)
             driver.execute_script('document.getElementsByClassName("ztree")[0].scrollBottom=99999')
-            # 贵阳市区
-            driver.find_element_by_id('ui-id-33_81_switch').click()
-            driver.find_element_by_id('ui-id-33_89_switch').click()
-            driver.find_element_by_id('ui-id-33_626_span').click()
+            # 上海市中区
+            driver.find_element_by_id('ui-id-33_152_switch').click()
+            driver.find_element_by_id('ui-id-33_153_switch').click()
+            driver.find_element_by_id('ui-id-33_422_span').click()
             # 哈尔滨市区
             # driver.find_element_by_id('ui-id-33_360_switch').click()
             # driver.find_element_by_id('ui-id-33_361_switch').click()
@@ -186,6 +192,7 @@ def customer_manager():
             driver.find_element_by_name('contactPhone').send_keys('16666666666' + str(sendran))
             driver.find_element_by_name('postCode').send_keys('150000')
             driver.find_element_by_name('contactName').send_keys(name_list[sendname] + str(sendran))
+            """总部行业分类"""
             driver.find_element_by_name('callingTypeCode').click()
             driver.find_element_by_link_text("金融业").click()
             driver.find_element_by_link_text("银行").click()
@@ -198,7 +205,7 @@ def customer_manager():
             # time.sleep(1)
             # ActionChains(driver).click(on_element=None).perform()
             # time.sleep(1)
-            a = driver.find_element_by_xpath('//li[contains(text(),"身份证18位")]').click()
+            driver.find_element_by_xpath('//li[contains(text(),"身份证18位")]').click()
             driver.find_element_by_name("certiAddr").send_keys('这是一条测试地址' + str(sendran))
             driver.find_element_by_name("phone").send_keys('16666666666' + str(sendran))
             driver.find_element_by_name("certiCode").send_keys('371523199206055312')
@@ -208,11 +215,11 @@ def customer_manager():
                 break
             driver.find_element_by_xpath('/html/body/div[6]/div[3]/button').click()
             # driver.execute_script("document.getElementById('busiLicenseInfo_certFile_filefield').click()")
-            '''上传开户证件图像'''
+            """上传开户证件图像"""
             driver.find_element_by_xpath('//*[@id="creditCertiForm"]/div[4]/div[1]/div/div/div/span[1]/input').click()
             os.system(r'.\\other\\autoupdate.exe')  # 调用外部Auto_it Script进行功能实现
             time.sleep(5)
-            '''客户经理信息'''
+            """客户经理信息"""
             # driver.find_element_by_xpath('//*[@id="baseinfo-panel"]/div[5]/div[1]/div/button').click()
             # driver.find_element_by_xpath('//*[@id="managerForm"]/div[2]/div[1]/div/div/input').click()
             # time.sleep(3)
@@ -223,7 +230,7 @@ def customer_manager():
             # driver.find_element_by_xpath('//td[contains(@aria-describedby,"ui-id-43_userOrgName")]').click()
             # driver.find_element_by_xpath('/html/body/div[8]/div[3]/button[1]').click()
             # driver.find_element_by_xpath('/html/body/div[7]/div[3]/button[1]').click()
-            '''提交'''
+            """提交"""
             driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div/div[2]/div[4]/button[2]').click()
             time.sleep(5)
             if is_exist_element('/html/body/div[7]/div[2]/div'):

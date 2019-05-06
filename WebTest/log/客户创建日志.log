@@ -1,0 +1,63 @@
+打开页面
+验证码为：BA
+正在登录
+尝试Cookie登录
+登录成功
+当前客户名称为：厦门美图移动科技有限公司，统一信用代码证为：9135020005838393XX
+客户资料名称已存在！同名的客户编码：3131031252310004681，已自动跳过
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+当前客户名称为：湖北宏盛手机连锁有限公司，统一信用代码证为：914205006797775608
+客户资料创建成功，集团客户编码：3131031252310004682，
+客户资料同步省BSS失败，同步返回信息为空，
+服务暂不可用！
+继续添加下一条，当前时间为：2019-05-06 13:42:51
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+当前客户名称为：湖北宏盛手机连锁有限公司，统一信用代码证为：914205006797775608
+识别元素失败,刷新页面
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+识别元素失败,刷新页面
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+元素未显示,刷新页面
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+所有数据已创建完毕
+打开页面
+验证码为：
+正在登录
+尝试Cookie登录
+登录成功
+当前客户名称为：厦门美图移动科技有限公司，统一信用代码证为：9135020005838393XX
+客户资料名称已存在！同名的客户编码：3131031252310004681，已自动跳过
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+当前客户名称为：湖北宏盛手机连锁有限公司，统一信用代码证为：914205006797775608
+客户资料名称已存在！同名的客户编码：3131031252310004682，已自动跳过
+识别元素失败,刷新页面
+当前客户名称为：湖北宏盛手机连锁有限公司，统一信用代码证为：914205006797775608
+客户资料名称已存在！同名的客户编码：3131031252310004682，已自动跳过
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+未能正确获取客户资料信息，原因：缓存库接口返回参数异常！组合逻辑出错JavaException: com.tydic.esb.EsbException: 服务暂不可用JavaException: com.tydic.esb.EsbException: 子服务[服务名:SB_MDM_MDM_InquiryEnterpriseInfoSrv，版本:1，操作:process]调用出错:落地结点:发送请求至落地机构连接出错:Connection to http://10.0.105.6:7777 refused>>>http://10.0.105.6:7777/orabpel/mdm/SB_MDM_MDM_InquiryEnterpriseInfoSrv?wsdl。
+所有数据已创建完毕
