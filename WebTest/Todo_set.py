@@ -162,7 +162,7 @@ def main():
     get_auth_code.authCodeText = get_auth_code(driver, get_auth_code.imgElement)
     print('验证码为：' + get_auth_code.authCodeText)
     print('正在登录')
-    sys_login(driver, 'admin', 'abc@123', get_auth_code.authCodeText)
+    sys_login(driver, '', '', get_auth_code.authCodeText)
     todo_check(runtime)
 
 

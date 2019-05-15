@@ -2,7 +2,7 @@ import pymysql
 
 
 class MySQLConnect:
-    def __init__(self, host="10.124.147.173", name="hj_test_cust", pwd="Test3333", table="hj_test_cust"):
+    def __init__(self, host=None, name=None, pwd=None, table=None):
         self.host = host
         self.name = name
         self.pwd = pwd
@@ -29,11 +29,11 @@ class MySQLConnect:
 
 
 if __name__ == '__main__':
-    hj_test_cust = MySQLConnect(host="10.124.147.173", name="hj_test_cust", pwd="Test3333", table="hj_test_cust")
-    hj_test_ulog = MySQLConnect(host="10.124.147.173", name="hj_test_ulog", pwd="Test3333", table="hj_test_ulog")
-    hj_test_portal = MySQLConnect(host="10.124.147.173", name="hj_test_portal", pwd="Test3333", table="hj_test_portal")
-    hj_pre_cust = MySQLConnect(host="10.124.147.23", name="hj_pre_cust", pwd="zte_1234", table="hj_pre_cust")
-    hj_pre_portal = MySQLConnect(host="10.124.147.23", name="hj_pre_portal", pwd="Test3333", table="hj_pre_portal")
+    hj_test_cust = MySQLConnect(host="", name="", pwd="", table="")
+    hj_test_ulog = MySQLConnect(host="", name="", pwd="", table="")
+    hj_test_portal = MySQLConnect(host="", name="", pwd="", table="")
+    hj_pre_cust = MySQLConnect(host="", name="", pwd="", table="")
+    hj_pre_portal = MySQLConnect(host="", name="", pwd="", table="")
     hj_test_cust.sql_execute("SELECT * FROM tf_f_cust_group where cust_id=3019040314013175")
     # hj_test_cust.sql_execute("show rule from tf_f_cust_group")
     hj_test_ulog.sql_execute('''select a.REQ_JSON,a.RESP_JSON,a.LOG_TIME from operation_log a 

@@ -139,6 +139,7 @@ def sys_login(driver, account, passwd, authCode):
 
 def customer_manager():
     """客户资料创建"""
+    print('加载代码证数据成功，共{}条'.format(len(excel_by_index())))
     for code_input in excel_by_index():  # code_read():
         try:
             custumer_click = driver.find_element_by_xpath("//a[contains(@menu_name,'客户中心')]")
@@ -266,7 +267,7 @@ def main():
     get_auth_code.authCodeText = get_auth_code(driver, get_auth_code.imgElement)
     print('验证码为：' + get_auth_code.authCodeText)
     print('正在登录')
-    sys_login(driver, 'admin', 'abc@123', get_auth_code.authCodeText)
+    sys_login(driver, '', '', get_auth_code.authCodeText)
 
 
 class Logger(object):  # Log日志记录

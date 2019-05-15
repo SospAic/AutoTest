@@ -17,7 +17,7 @@ from xlutils3.copy import copy
 
 # 数据库操作
 class MySQL:
-    def __init__(self, host="10.124.147.173", name="hj_test_cust", pwd="Test3333", schema="hj_test_cust"):
+    def __init__(self, host=None, name=None, pwd=None, schema=None):
         self.host = host
         self.name = name
         self.pwd = pwd
@@ -50,7 +50,7 @@ class MySQL:
         # self.db.close()  # 关闭数据库连接
 
     # 获取字段信息
-    def database_description(self, table_name, schema="hj_test_cust"):
+    def database_description(self, table_name, schema=None):
         try:
             self.cursor.execute("SELECT t.column_name '字段名',"
                                 "t.COLUMN_TYPE '数据类型',"
@@ -172,7 +172,7 @@ def login_check(url):
     im.show()
     code = input('请输入验证码：')
     loginUrl = url
-    postData = {"userCode": "superadmin", "password": "gbgbhdfpdbdbdcdc", "verifyCode": code, "clientType": "1000",
+    postData = {"userCode": "", "password": "", "verifyCode": code, "clientType": "1000",
                 "browserType": "Chrome", "loginWay": "password"}
     rs = s.post(loginUrl, data=postData, timeout=5)
     # print(rs.status_code)
