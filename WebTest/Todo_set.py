@@ -117,8 +117,8 @@ def todo_check(runtime):
             driver.find_element_by_name('auditContent').send_keys('测试通过')
             time.sleep(2)
             driver.find_element_by_xpath('//*[@id="app"]/div/div/div[1]/div[2]/form/div[2]/div/div/button[1]').click()
-            driver.find_element_by_xpath('/html/body/div[3]/div[3]/button[1]').click()
-            driver.find_element_by_xpath('/html/body/div[2]/div[3]/button').click()
+            driver.find_element_by_xpath('/html/body/div[4]/div[3]/button[1]').click()
+            driver.find_element_by_xpath('/html/body/div[3]/div[3]/button').click()
             print('已处理{}条数据'.format(num + 1))
             time.sleep(2)
         except NoSuchElementException:
@@ -162,7 +162,7 @@ def main():
     get_auth_code.authCodeText = get_auth_code(driver, get_auth_code.imgElement)
     print('验证码为：' + get_auth_code.authCodeText)
     print('正在登录')
-    sys_login(driver, '', '', get_auth_code.authCodeText)
+    sys_login(driver, '150001', 'abc@2468', get_auth_code.authCodeText)
     todo_check(runtime)
 
 

@@ -7,6 +7,8 @@ import sys
 import json
 import traceback
 import pdb
+
+import xlrd
 from selenium import webdriver
 from PIL import Image, ImageEnhance
 from selenium.common.exceptions import *
@@ -29,13 +31,36 @@ def get_auth_code(driver, codeEelement):
 
 
 def code_read(filename='./input_file/Code_list.txt'):
-    """加载组织机构代码证列表"""
+    """通过TXT文件加载组织机构代码证列表"""
     f = open(filename)
     code_list = []
     for line in f.readlines():
         cur_line = line.strip().split()
         code_list.append(cur_line)
     return code_list
+
+
+def open_excel(file='./output_file/Code_data.xls'):  # 打开要解析的Excel文件
+    try:
+        data = xlrd.open_workbook(file)
+        return data
+    except Exception as e:
+        print(e)
+
+
+def excel_by_index(file='./output_file/Code_data.xls', by_index=0):  # 按表的索引读取
+    """通过抓取的统一社会信用代码证创建"""
+    data = open_excel(file)  # 打开excel文件
+    tab = data.sheets()[by_index]  # 选择excel里面的Sheet
+    n_rows = tab.nrows  # 行数
+    list_create = []  # 创建一个空列表
+    for x in range(1, n_rows):  # 第一行为标题（第一行为0），所以从第二行开始
+        row = tab.row_values(x, start_colx=0, end_colx=2)
+        if row[0] is '-' or None:  # 判断空白或占位符
+            continue
+        else:
+            list_create.append(row)
+    return list_create
 
 
 def is_exist_element(elem, code='已存在'):
@@ -121,7 +146,7 @@ def taxpayer_create(runtime):
             custumer_click = driver.find_element_by_xpath("//a[contains(@menu_name,'客户中心')]")
             ActionChains(driver).move_to_element(custumer_click).perform()
             third_menu = driver.find_elements_by_xpath('//*[@id="thirdMenuInfo"]/li')
-            third_menu[10].click()
+            third_menu[12].click()
             time.sleep(5)
             driver.switch_to.frame("2511Iframe")
             # 调试
@@ -133,15 +158,14 @@ def taxpayer_create(runtime):
             sendname = random.choice(name_list)
             '''纳税人资质信息'''
             driver.find_element_by_xpath('//*[@id="app"]/div/div/div[3]/div[1]/div/button').click()
-            tax_num = '91234567890123{}'.format(sendran)
-            driver.find_element_by_name('taxpayerCode').send_keys(tax_num)
-            print('纳税人识别号：{}'.format(tax_num))
-            tax_name = '纳税人资质测试{}'.format(sendran)
-            driver.find_element_by_name('taxpayerName').send_keys(tax_name)
-            print('单位名称：{}'.format(tax_name))
+            tax_info = excel_by_index()[runtime-1]
+            driver.find_element_by_name('taxpayerCode').send_keys(tax_info[1])
+            print('纳税人识别号：{}'.format(tax_info[1]))
+            driver.find_element_by_name('taxpayerName').send_keys(tax_info[0])
+            print('单位名称：{}'.format(tax_info[0]))
             tax_address = '这是一条测试地址{}'.format(sendran)
-            driver.find_element_by_name('address').send_keys(tax_address)
-            print('地址：{}'.format(tax_address))
+            # driver.find_element_by_name('address').send_keys(tax_address)
+            # print('地址：{}'.format(tax_address))
             tax_cellnumber = '136666666{}'.format(sendran)
             # driver.find_element_by_name('cellNumber').send_keys(tax_cellnumber)
             # print('注册电话：{}'.format(tax_cellnumber))
@@ -242,7 +266,7 @@ def main():
     get_auth_code.authCodeText = get_auth_code(driver, get_auth_code.imgElement)
     print('验证码为：' + get_auth_code.authCodeText)
     print('正在登录')
-    sys_login(driver, '', '', get_auth_code.authCodeText)
+    sys_login(driver, '150001', 'abc@2468', get_auth_code.authCodeText)
     taxpayer_create(runtime)
 
 
@@ -265,8 +289,11 @@ if __name__ == '__main__':
     driver = webdriver.Chrome(executable_path=r"D:\Software\ChromePortable\chromedriver.exe")  # Chrome配置参数
     sys.stdout = Logger('./log/纳税人资质创建日志.log')
     driver.minimize_window()
-    runtime = input('请输入要添加多少条数据：')
-    runtime = int(runtime)
-    main()
+    runtime = input('请输入要添加多少条数据，最大值为{}：'.format(len(excel_by_index())))
+    if int(runtime) <= len(excel_by_index()):
+        runtime = int(runtime)
+        main()
+    else:
+        print('输入数量超过最大值，请重新输入')
     # driver.execute_script("window.alert('Selenium执行完毕')")
     driver.quit()

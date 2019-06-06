@@ -165,8 +165,8 @@ def customer_manager():
                 driver.refresh()
                 continue
             driver.find_element_by_xpath('//*[@id="jqg1"]').click()
-            driver.find_element_by_xpath('/html/body/div[6]/div[3]/button[1]').click()
             driver.find_element_by_xpath('/html/body/div[7]/div[3]/button[1]').click()
+            driver.find_element_by_xpath('/html/body/div[8]/div[3]/button[1]').click()
             """当前客户信息"""
             cust_name = driver.find_element_by_name('custName').get_attribute('value')
             print('当前客户名称为：{}，统一信用代码证为：{}'.format(cust_name, str(code_input)))
@@ -174,10 +174,17 @@ def customer_manager():
             driver.find_element_by_xpath('//*[@id="custInfoForm"]/div[2]/div[1]/div/div/div/div[2]/input').click()
             time.sleep(1)
             driver.execute_script('document.getElementsByClassName("ztree")[0].scrollBottom=99999')
+            # 北京市大兴区
+            driver.find_element_by_id('ui-id-33_1_switch').click()
+            driver.find_element_by_id('ui-id-33_201_span').click()
+            # 成都锦江区
+            # driver.find_element_by_id('ui-id-33_154_switch').click()
+            # driver.find_element_by_id('ui-id-33_155_switch').click()
+            # driver.find_element_by_id('ui-id-33_422_span').click()
             # 上海市中区
-            driver.find_element_by_id('ui-id-33_152_switch').click()
-            driver.find_element_by_id('ui-id-33_153_switch').click()
-            driver.find_element_by_id('ui-id-33_422_span').click()
+            # driver.find_element_by_id('ui-id-33_152_switch').click()
+            # driver.find_element_by_id('ui-id-33_153_switch').click()
+            # driver.find_element_by_id('ui-id-33_422_span').click()
             # 哈尔滨市区
             # driver.find_element_by_id('ui-id-33_360_switch').click()
             # driver.find_element_by_id('ui-id-33_361_switch').click()
@@ -267,7 +274,7 @@ def main():
     get_auth_code.authCodeText = get_auth_code(driver, get_auth_code.imgElement)
     print('验证码为：' + get_auth_code.authCodeText)
     print('正在登录')
-    sys_login(driver, '', '', get_auth_code.authCodeText)
+    sys_login(driver, '150004', 'abc@2468', get_auth_code.authCodeText)
 
 
 class Logger(object):  # Log日志记录
