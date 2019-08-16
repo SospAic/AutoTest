@@ -137,8 +137,8 @@ def request_get(url_add, method='post', request_data=None):
             'Accept-Language': 'zh-CN',
         }
         # 简化模式，初次登录须校验，添加反爬
-        headers1 = {'Content-Type': 'application/json;charset=UTF-8',
-                    'Referer': url_add}
+        headers1 = {"Content-Type": "application/json;charset=UTF-8",
+                    "Referer": url_add}
         if method == 'get':
             rs = s.get(url_add, params=request_data, timeout=5)  # 加入超时限制
             # print(rs.text)
@@ -172,7 +172,7 @@ def login_check(url):
     im.show()
     code = input('请输入验证码：')
     loginUrl = url
-    postData = {"userCode": "", "password": "", "verifyCode": code, "clientType": "1000",
+    postData = {"userCode": "admin", "password": "gkgldadacnfagbhdhdhhgphcge", "verifyCode": code, "clientType": "1000",
                 "browserType": "Chrome", "loginWay": "password"}
     rs = s.post(loginUrl, data=postData, timeout=5)
     # print(rs.status_code)

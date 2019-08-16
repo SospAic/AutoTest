@@ -141,6 +141,7 @@ def sys_login(driver, account, passwd, authCode):
 
 def taxpayer_create(runtime):
     """纳税人资质创建创建"""
+    print('加载代码证数据成功，共{}条'.format(len(excel_by_index())))
     for num in range(runtime):
         try:
             custumer_click = driver.find_element_by_xpath("//a[contains(@menu_name,'客户中心')]")
@@ -167,8 +168,8 @@ def taxpayer_create(runtime):
             # driver.find_element_by_name('address').send_keys(tax_address)
             # print('地址：{}'.format(tax_address))
             tax_cellnumber = '136666666{}'.format(sendran)
-            # driver.find_element_by_name('cellNumber').send_keys(tax_cellnumber)
-            # print('注册电话：{}'.format(tax_cellnumber))
+            driver.find_element_by_name('cellNumber').send_keys(tax_cellnumber)
+            print('注册电话：{}'.format(tax_cellnumber))
             tax_bankname = '测试开户银行{}'.format(sendran)
             driver.find_element_by_name('bankName').send_keys(tax_bankname)
             print('开户银行：{}'.format(tax_bankname))
@@ -266,7 +267,7 @@ def main():
     get_auth_code.authCodeText = get_auth_code(driver, get_auth_code.imgElement)
     print('验证码为：' + get_auth_code.authCodeText)
     print('正在登录')
-    sys_login(driver, '150001', 'abc@2468', get_auth_code.authCodeText)
+    sys_login(driver, 'admin', 'abc@123', get_auth_code.authCodeText)
     taxpayer_create(runtime)
 
 
