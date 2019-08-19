@@ -1,54 +1,47 @@
 # -*- coding: utf-8 -*-
-import re
+import sys
+import time
 import traceback
 import requests
 import json
 import xlrd
 
 
-# Excel读取/创建文件
-class Excel:
-    def __init__(self, file='./output_file/Code_data.xls', colindex=0, by_index=0):
-        self.file = file
-        self.colindex = colindex
-        self.by_index = by_index
+# Log日志记录
+class Logger(object):
+    def __init__(self, filename="./log/Default.log"):
+        self.terminal = sys.stdout
+        self.log = open(filename, "a", encoding="utf-8")
 
-    def open_excel(self):  # 打开要解析的Excel文件
-        try:
-            data = xlrd.open_workbook(self.file)
-            return data
-        except Exception as e:
-            print(e)
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
 
-    def testcase_index(self):  # 读取组织机构信息
-        data = self.open_excel()  # 打开excel文件
-        tab = data.sheets()[self.by_index]  # 选择excel里面的Sheet
-        n_rows = tab.nrows  # 行数
-        n_cols = tab.ncols  # 列数
-        col_name = tab.row_values(self.colindex)  # 第0行的值
-        list_create = []  # 创建一个空列表
-        for x in range(1, n_rows):  # 第一行为标题（第一行为0），所以从第二行开始
-            row = tab.row_values(x)
-            # if row[-1] == '是':
-            if re.search('是', row[-1], re.I):
-                app = {}  # 创建空字典
-                for y in range(0, n_cols):
-                    app[col_name[y]] = row[y]
-                list_create.append(app)
-            else:
-                continue
-        return list_create
+    def flush(self):
+        pass
 
-    def result_index(self):  # 读取标题内容
-        data = self.open_excel()  # 打开excel文件
-        tab = data.sheets()[self.by_index + 0]  # 选择excel里面的Sheet
-        col_name = tab.row_values(self.colindex)
-        list_results = []  # 创建一个空列表
-        app = {}  # 创建空字典
-        for num, name in enumerate(col_name):  # 第一行为标题（第一行为0），所以从第二行开始
-            app[name] = ''
-        list_results.append(app)
-        return list_results
+
+def open_excel(file='./output_file/Code_data.xls'):  # 打开要解析的Excel文件
+    try:
+        data = xlrd.open_workbook(file)
+        return data
+    except Exception as e:
+        print(e)
+
+
+def excel_by_index(file='./output_file/Code_data.xls', by_index=0):  # 按表的索引读取
+    """通过抓取的统一社会信用代码证创建"""
+    data = open_excel(file)  # 打开excel文件
+    tab = data.sheets()[by_index]  # 选择excel里面的Sheet
+    n_rows = tab.nrows  # 行数
+    list_create = []  # 创建一个空列表
+    for x in range(1, n_rows):  # 第一行为标题（第一行为0），所以从第二行开始
+        row = tab.row_values(x, start_colx=0, end_colx=2)
+        if row[0] is '-' or None:  # 判断空白或占位符
+            continue
+        else:
+            list_create.append(row)
+    return list_create
 
 
 # 发送认证
@@ -100,7 +93,16 @@ def nautureinfo_get(vendor_name='', org_code='601071541'):
         pass
 
 
+def get_info():
+    nature_list = excel_by_index()[:]
+    print('共计{0:>2}条数据'.format(len(nature_list)))
+    for nature_info in nature_list:
+        print('当前组织名称：{}，统一社会信用代码：{}'.format(nature_info[0], nature_info[1]))
+        nautureinfo_get(nature_info[0], nature_info[1])
+        time.sleep(1)
+    print('处理完成')
+
+
 if __name__ == '__main__':
-    excel = Excel()
-    print(excel.testcase_index())
-    nautureinfo_get()
+    sys.stdout = Logger('./log/政企自然客户查询.log')
+    get_info()
