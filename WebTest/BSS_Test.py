@@ -164,9 +164,9 @@ def customer_manager():
                 driver.find_element_by_xpath('/html/body/div[6]/div[3]/button').click()
                 driver.refresh()
                 continue
-            driver.find_element_by_xpath('//*[@id="jqg11"]').click()
+            driver.find_element_by_xpath('//*[@id="btable_ui-id-40"]').click()
+            driver.find_element_by_xpath('/html/body/div[6]/div[3]/button[1]').click()
             driver.find_element_by_xpath('/html/body/div[7]/div[3]/button[1]').click()
-            driver.find_element_by_xpath('/html/body/div[8]/div[3]/button[1]').click()
             """当前客户信息"""
             cust_name = driver.find_element_by_name('custName').get_attribute('value')
             print('当前客户名称为：{}，统一信用代码证为：{}'.format(cust_name, str(code_input)))
@@ -180,7 +180,7 @@ def customer_manager():
             # 成都锦江区
             driver.find_element_by_id('ui-id-33_154_switch').click()
             driver.find_element_by_id('ui-id-33_155_switch').click()
-            driver.find_element_by_id('ui-id-33_422_span').click()
+            driver.find_element_by_id('ui-id-33_439_span').click()
             # 上海市中区
             # driver.find_element_by_id('ui-id-33_152_switch').click()
             # driver.find_element_by_id('ui-id-33_153_switch').click()
