@@ -39,4 +39,3 @@ if __name__ == '__main__':
     hj_test_ulog.sql_execute('''select a.REQ_JSON,a.RESP_JSON,a.LOG_TIME from operation_log a 
 where class_name="com.ztesoft.bss.cust_capacity.wsdl.endpoint.CUSBUCUGrpAccountSerEndpoint" and a.method_name="crtGrpAccountInfo"
 and a.LOG_TIME BETWEEN '2019-04-04 00:00:00'  and  '2019-04-05 18:00:00';''')
-

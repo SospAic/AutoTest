@@ -21,7 +21,6 @@ import os
 import tempfile
 import zipfile
 
-
 LOGGER = logging.getLogger(__name__)
 
 

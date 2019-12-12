@@ -50,11 +50,12 @@ def excel_by_index(file='./output_file/Code_data.xls', by_index=0):  # 按表的
 def get_auth_code(driver, codeEelement):
     """获取验证码"""
     driver.save_screenshot('./pic_code/Authcap.png')  # 截取登录页面
-    imgSize = codeEelement.size   # 获取验证码图片的大小
+    imgSize = codeEelement.size  # 获取验证码图片的大小
     imgLocation = get_auth_code.imgElement.location  # 获取验证码元素坐标
-    rangle = (int(imgLocation['x']), int(imgLocation['y']), int(imgLocation['x'] + imgSize['width']), int(imgLocation['y']+imgSize['height']))  # 计算验证码整体坐标
+    rangle = (int(imgLocation['x']), int(imgLocation['y']), int(imgLocation['x'] + imgSize['width']),
+              int(imgLocation['y'] + imgSize['height']))  # 计算验证码整体坐标
     login = Image.open("./pic_code/Authcap.png")
-    frame4 = login.crop(rangle)   # 截取验证码图片
+    frame4 = login.crop(rangle)  # 截取验证码图片
     frame4.save('./pic_code/authcode.png')
     authcodeImg = Image.open('./pic_code/authcode.png')
     authCodeText = pytesseract.image_to_string(authcodeImg).strip()
@@ -156,20 +157,22 @@ def customer_manager():
             '''获取客户信息'''
             driver.find_element_by_xpath('//*[@id="baseinfo-panel"]/div[1]/form/div[1]/div[1]/div/div[1]/div').click()
             driver.find_element_by_xpath('//li[contains(text(),"统一社会信用代码证书")]').click()
-            driver.find_element_by_xpath('//*[@id="baseinfo-panel"]/div[1]/form/div[1]/div/div/div[3]/input').send_keys(code_input)
+            driver.find_element_by_xpath('//*[@id="baseinfo-panel"]/div[1]/form/div[1]/div/div/div[3]/input').send_keys(
+                code_input)
             driver.find_element_by_xpath('//button[contains(text(),"获取")]').click()
-            if is_exist_element('/html/body/div[6]/div[2]/div', '未能正确获取'):
-                warning = driver.find_element_by_xpath('/html/body/div[6]/div[2]/div').text
-                print(warning)
-                driver.find_element_by_xpath('/html/body/div[6]/div[3]/button').click()
-                driver.refresh()
-                continue
-            driver.find_element_by_xpath('//*[@id="btable_ui-id-40"]').click()
-            driver.find_element_by_xpath('/html/body/div[6]/div[3]/button[1]').click()
-            driver.find_element_by_xpath('/html/body/div[7]/div[3]/button[1]').click()
+            # if is_exist_element('/html/body/div[6]/div[2]/div', '未能正确获取'):
+            #     warning = driver.find_element_by_xpath('/html/body/div[6]/div[2]/div').text
+            #     print(warning)
+            #     driver.find_element_by_xpath('/html/body/div[6]/div[3]/button').click()
+            #     driver.refresh()
+            #     continue
+            # driver.find_element_by_xpath('//*[@id="btable_ui-id-40"]').click()
+            # driver.find_element_by_xpath('/html/body/div[6]/div[3]/button[1]').click()
+            # driver.find_element_by_xpath('/html/body/div[7]/div[3]/button[1]').click()
             """当前客户信息"""
             cust_name = driver.find_element_by_name('custName').get_attribute('value')
             print('当前客户名称为：{}，统一信用代码证为：{}'.format(cust_name, str(code_input)))
+            time.sleep(3)
             """基本信息"""
             driver.find_element_by_xpath('//*[@id="custInfoForm"]/div[2]/div[1]/div/div/div/div[2]/input').click()
             time.sleep(1)
@@ -177,10 +180,14 @@ def customer_manager():
             # 北京市大兴区
             # driver.find_element_by_id('ui-id-33_1_switch').click()
             # driver.find_element_by_id('ui-id-33_201_span').click()
+            # 安徽省合肥市
+            driver.find_element_by_id('ui-id-12_1_switch').click()
+            driver.find_element_by_id('ui-id-12_504_switch').click()
+            driver.find_element_by_id('ui-id-12_505_span').click()
             # 成都锦江区
-            driver.find_element_by_id('ui-id-33_154_switch').click()
-            driver.find_element_by_id('ui-id-33_155_switch').click()
-            driver.find_element_by_id('ui-id-33_439_span').click()
+            # driver.find_element_by_id('ui-id-33_154_switch').click()
+            # driver.find_element_by_id('ui-id-33_155_switch').click()
+            # driver.find_element_by_id('ui-id-33_439_span').click()
             # 上海市中区
             # driver.find_element_by_id('ui-id-33_152_switch').click()
             # driver.find_element_by_id('ui-id-33_153_switch').click()
@@ -205,7 +212,7 @@ def customer_manager():
             driver.find_element_by_link_text("金融业").click()
             driver.find_element_by_link_text("银行").click()
             driver.find_element_by_link_text("主管机构").click()
-            driver.find_element_by_xpath('/html/body/div[4]/div/div[4]/button[1]').click()
+            driver.find_element_by_xpath('/html/body/div[3]/div/div[4]/button[1]').click()
             '''经办人信息'''
             driver.find_element_by_name('transactorName').send_keys('吴延华')
             driver.find_element_by_xpath('//*[@id="transactorForm"]/div[1]/div[2]/div/div/div').click()
@@ -218,10 +225,10 @@ def customer_manager():
             driver.find_element_by_name("phone").send_keys('16666666666' + str(sendran))
             driver.find_element_by_name("certiCode").send_keys('371523199206055312')
             driver.find_element_by_xpath('//button[contains(text(),"认证")]').click()
-            if is_exist_element('/html/body/div[7]/div[2]/div', '未通过'):
-                print(driver.find_element_by_xpath('/html/body/div[7]/div[2]/div').text)
-                break
-            driver.find_element_by_xpath('/html/body/div[6]/div[3]/button').click()
+            # if is_exist_element('/html/body/div[4]/div[2]/div', '未通过'):
+            #     print(driver.find_element_by_xpath('/html/body/div[4]/div[2]/div').text)
+            #     break
+            driver.find_element_by_xpath('/html/body/div[5]/div[3]/button').click()
             # driver.execute_script("document.getElementById('busiLicenseInfo_certFile_filefield').click()")
             """上传开户证件图像"""
             driver.find_element_by_xpath('//*[@id="creditCertiForm"]/div[4]/div[1]/div/div/div/span[1]/input').click()

@@ -36,4 +36,3 @@ def func1():
 if __name__ == '__main__':
     t = LoopTimer(2, func1)
     t.start()
-

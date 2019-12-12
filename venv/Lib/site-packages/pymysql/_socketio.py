@@ -13,8 +13,8 @@ __all__ = ['SocketIO']
 EINTR = errno.EINTR
 _blocking_errnos = (errno.EAGAIN, errno.EWOULDBLOCK)
 
-class SocketIO(io.RawIOBase):
 
+class SocketIO(io.RawIOBase):
     """Raw I/O implementation for stream sockets.
 
     This class supports the makefile() method on sockets.  It provides
@@ -131,4 +131,3 @@ class SocketIO(io.RawIOBase):
         io.RawIOBase.close(self)
         self._sock._decref_socketios()
         self._sock = None
-

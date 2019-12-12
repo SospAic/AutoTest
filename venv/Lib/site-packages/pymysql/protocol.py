@@ -11,7 +11,6 @@ from .util import byte2int
 import struct
 import sys
 
-
 DEBUG = False
 
 NULL_COLUMN = 251
@@ -37,7 +36,7 @@ def dump_packet(data):  # pragma: no cover
         print("-" * 66)
     except ValueError:
         pass
-    dump_data = [data[i:i+16] for i in range_type(0, min(len(data), 256), 16)]
+    dump_data = [data[i:i + 16] for i in range_type(0, min(len(data), 256), 16)]
     for d in dump_data:
         print(' '.join("{:02X}".format(byte2int(x)) for x in d) +
               '   ' * (16 - len(d)) + ' ' * 2 +
@@ -62,7 +61,7 @@ class MysqlPacket(object):
 
     def read(self, size):
         """Read the first 'size' bytes in packet and advance cursor past them."""
-        result = self._data[self._position:(self._position+size)]
+        result = self._data[self._position:(self._position + size)]
         if len(result) != size:
             error = ('Result length not requested length:\n'
                      'Expected=%s.  Actual=%s.  Position: %s.  Data Length: %s'
@@ -106,7 +105,7 @@ class MysqlPacket(object):
         No error checking is done.  If requesting outside end of buffer
         an empty string (or string shorter than 'length') may be returned!
         """
-        return self._data[position:(position+length)]
+        return self._data[position:(position + length)]
 
     if PY2:
         def read_uint8(self):

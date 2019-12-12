@@ -58,4 +58,3 @@ def taxpayer_get(create_num=1):
 if __name__ == '__main__':
     sys.stdout = Logger('./log/纳税人资质创建.log')
     taxpayer_get(20)
-

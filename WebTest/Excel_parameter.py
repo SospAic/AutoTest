@@ -39,7 +39,6 @@ def login():
         assert 0, u"Excel数据异常"
 
     for i in range(0, len(list_data)):
-
         assert "百度" in driver.title
         print(list_data[i]['用户名'] + ": " + str(list_data[i]['密码']))
         # 搜索开始

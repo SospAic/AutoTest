@@ -1,4 +1,3 @@
-
 """
 This is the Advanced Generic Widgets package (AGW). It provides many
 custom-drawn wxPython controls: some of them can be used as a replacement

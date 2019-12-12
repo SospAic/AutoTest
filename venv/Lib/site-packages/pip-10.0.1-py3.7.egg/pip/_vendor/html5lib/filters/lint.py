@@ -6,6 +6,7 @@ from . import base
 from ..constants import namespaces, voidElements
 
 from ..constants import spaceCharacters
+
 spaceCharacters = "".join(spaceCharacters)
 
 
@@ -15,6 +16,7 @@ class Filter(base.Filter):
     If it finds any errors, it'll raise an ``AssertionError``.
 
     """
+
     def __init__(self, source, require_matching_tags=True):
         """Creates a Filter
 

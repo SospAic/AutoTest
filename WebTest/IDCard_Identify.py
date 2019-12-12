@@ -40,6 +40,7 @@ def get_identify(url):
     the_page = response.read()
     print(the_page.decode("utf8"))
 
+
 """
 在Python3中，将中文进行urlencode编码使用函数
 urllib.parse.quote(string, safe='/', encoding=None, errors=None)

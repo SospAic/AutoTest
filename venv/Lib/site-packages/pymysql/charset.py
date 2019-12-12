@@ -1,9 +1,9 @@
 MBLENGTH = {
-        8:1,
-        33:3,
-        88:2,
-        91:2
-        }
+    8: 1,
+    33: 3,
+    88: 2,
+    91: 2
+}
 
 
 class Charset(object):
@@ -13,7 +13,7 @@ class Charset(object):
 
     def __repr__(self):
         return "Charset(id=%s, name=%r, collation=%r)" % (
-                self.id, self.name, self.collation)
+            self.id, self.name, self.collation)
 
     @property
     def encoding(self):
@@ -42,6 +42,7 @@ class Charsets:
 
     def by_name(self, name):
         return self._by_name.get(name.lower())
+
 
 _charsets = Charsets()
 """
@@ -204,7 +205,7 @@ charset_by_name = _charsets.by_name
 charset_by_id = _charsets.by_id
 
 
-#TODO: remove this
+# TODO: remove this
 def charset_to_encoding(name):
     """Convert MySQL's charset name to Python's codec name"""
     if name in ('utf8mb4', 'utf8mb3'):

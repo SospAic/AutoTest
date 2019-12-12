@@ -19,11 +19,12 @@ from selenium.webdriver import ActionChains
 def get_auth_code(driver, codeEelement):
     """获取验证码"""
     driver.save_screenshot('./pic_code/Authcap.png')  # 截取登录页面
-    imgSize = codeEelement.size   # 获取验证码图片的大小
+    imgSize = codeEelement.size  # 获取验证码图片的大小
     imgLocation = get_auth_code.imgElement.location  # 获取验证码元素坐标
-    rangle = (int(imgLocation['x']), int(imgLocation['y']), int(imgLocation['x'] + imgSize['width']), int(imgLocation['y']+imgSize['height']))  # 计算验证码整体坐标
+    rangle = (int(imgLocation['x']), int(imgLocation['y']), int(imgLocation['x'] + imgSize['width']),
+              int(imgLocation['y'] + imgSize['height']))  # 计算验证码整体坐标
     login = Image.open("./pic_code/Authcap.png")
-    frame4 = login.crop(rangle)   # 截取验证码图片
+    frame4 = login.crop(rangle)  # 截取验证码图片
     frame4.save('./pic_code/authcode.png')
     authcodeImg = Image.open('./pic_code/authcode.png')
     authCodeText = pytesseract.image_to_string(authcodeImg).strip()
@@ -159,7 +160,7 @@ def taxpayer_create(runtime):
             sendname = random.choice(name_list)
             '''纳税人资质信息'''
             driver.find_element_by_xpath('//*[@id="app"]/div/div/div[3]/div[1]/div/button').click()
-            tax_info = excel_by_index()[runtime-1]
+            tax_info = excel_by_index()[runtime - 1]
             driver.find_element_by_name('taxpayerCode').send_keys(tax_info[1])
             print('纳税人识别号：{}'.format(tax_info[1]))
             driver.find_element_by_name('taxpayerName').send_keys(tax_info[0])

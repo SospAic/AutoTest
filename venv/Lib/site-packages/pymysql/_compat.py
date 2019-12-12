@@ -8,6 +8,7 @@ CPYTHON = not PYPY and not JYTHON and not IRONPYTHON
 
 if PY2:
     import __builtin__
+
     range_type = xrange
     text_type = unicode
     long_type = long
