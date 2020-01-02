@@ -4,7 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
-desired_caps = {'platformName': "Android", 'platformVersion': '4.2.2', 'deviceName': '127.0.0.1:26944',
+desired_caps = {'platformName': "Android", 'platformVersion': '9', 'deviceName': '127.0.0.1:26944',
                 'appPackage': 'com.taobao.taobao', 'appActivity': 'com.taobao.tao.welcome.Welcome'}
 driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)  # 建立 session
 time.sleep(5)

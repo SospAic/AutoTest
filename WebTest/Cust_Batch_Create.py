@@ -31,8 +31,8 @@ def nature_info_get(num, before_num, cust_name='测试客户', org_code='HLJ1501
                 'Accept': 'application/json, text/javascript, */*; q=0.01',
                 'Content-Type': 'application/json',
                 'Accept-Encoding': '',
-                'Cookie': 'PORTALSESSION=77f87e20-1e18-44aa-b859-42135f9cb29e;'
-                          'SERVERID=34763c1f1acb34871d8360c4c56f649a|1576199904|1576198348'
+                'Cookie': 'PORTALSESSION=6a4e29a8-9a9c-45d0-855a-a0aa60be54f7; '
+                          'SERVERID=34763c1f1acb34871d8360c4c56f649a|1577088620|1577088564'
             }
             request_data = json.dumps(
                 {
@@ -70,11 +70,64 @@ def nature_info_get(num, before_num, cust_name='测试客户', org_code='HLJ1501
                     "custManagerRels": [],
                     "custCreditCerti": {
                         "certCode": "{0}{1}000{2:03d}".format(org_code, release_date, create_num),
-                        "certName": "测试客户1224002",
+                        "certName": "{0}{1}{2:03d}".format(cust_name, release_date, create_num),
                         "addr": "这是一条测试地址",
                         "legalName": "张小三",
                         "certFileName": "cus_统一社会信用代码证_20191213091439.jpg",
                         "certFileid": "210694",
+                        "mainCertFlag": "1"
+                    },
+                    "files": [],
+                    "custContacts": [],
+                    "custEvents": [],
+                    "asys": []
+                }
+            )
+            request_data1 = json.dumps(
+                {
+                    "operType": "Add",
+                    "custInfo": {
+                        "custName": "{0}{1}{2:03d}".format(cust_name, release_date, create_num),
+                        "inMethod": "G",
+                        "isPassOrg": "0",
+                        "custClassType": "2",
+                        "tempProvinceCode": "重庆市-万州区",
+                        "servLevelId": "0",
+                        "postAddr": "这是一条测试地址",
+                        "postCode": "404100",
+                        "contactName": "张小三",
+                        "contactPhone": "1366666666",
+                        "contactEmail": "abc@123.com",
+                        "vocaDeptTypeId": "3",
+                        "callingTypeCode": "科学、教育、文化体育、卫生、出版业-广播电影电视业-广播",
+                        "callingTypeCodeValue": "03,0305,030501",
+                        "officeType": "2",
+                        "groupMemo": "",
+                        "dataState": "J",
+                        "isImp": "0",
+                        "provinceCode": "83",
+                        "eparchyCode": "831",
+                        "bcityCode": "832001",
+                        "firstCallingTypeCode": "03",
+                        "secondCallingTypeCode": "0305",
+                        "thirdCallingTypeCode": "030501"
+                    },
+                    "custTransactor": {
+                        "transactorName": "吴余额",
+                        "certiTypeCode": "1",
+                        "certiCode": "371523199206055312",
+                        "isReal": "1",
+                        "phone": "1366666666",
+                        "certiAddr": "这是一条测试地址"
+                    },
+                    "custManagerRels": [],
+                    "custCreditCerti": {
+                        "certCode": "{0}{1}000{2:03d}".format(org_code, release_date, create_num),
+                        "certName": "{0}{1}{2:03d}".format(cust_name, release_date, create_num),
+                        "addr": "这是一条测试地址",
+                        "legalName": "张小三",
+                        "certFileName": "cus_统一社会信用代码证_20191220101233.jpg",
+                        "certFileid": "212050",
                         "mainCertFlag": "1"
                     },
                     "files": [],
