@@ -5,6 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 import time
 import xlrd
+from WebTest.Selenium_driver_base import selenium_driver
 
 
 def open_excel(file='./input_file/参数列表.xls'):  # 打开要解析的Excel文件
@@ -53,7 +54,7 @@ def login():
 if __name__ == '__main__':
     # driver = webdriver.Firefox(firefox_binary=r"D:\Software\Mozilla Firefox\firefox.exe",
     #                           executable_path=r"D:\Software\Mozilla Firefox\geckodriver.exe")  # Firefox配置参数
-    driver = webdriver.Chrome(executable_path=r"D:\Software\ChromePortable\chromedriver.exe")
+    driver = webdriver.Chrome(executable_path=selenium_driver())
     driver.get("https://www.baidu.com/")
     login()
     driver.quit()

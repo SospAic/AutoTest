@@ -4,6 +4,7 @@ import xlwt
 import sys
 import os
 from selenium import webdriver
+from WebTest.Selenium_driver_base import selenium_driver
 
 
 def excel_create(file_path):  # 创建表格
@@ -151,7 +152,7 @@ if __name__ == '__main__':
     # path = os.path.abspath(os.path.dirname(__file__))
     # type = sys.getfilesystemencoding()
     sys.stdout = Logger('./log/测试结果.log')
-    driver = webdriver.Chrome(executable_path=r"D:\Software\ChromePortable\chromedriver.exe")
+    driver = webdriver.Chrome(executable_path=selenium_driver())
     main()
     excel_create(r'./output_file/Code_data.xls')
     # driver.execute_script("window.alert('执行完毕')")

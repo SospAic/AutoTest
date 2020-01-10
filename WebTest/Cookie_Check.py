@@ -2,13 +2,14 @@
 import time
 from selenium import webdriver
 import pickle
+from WebTest.Selenium_driver_base import selenium_driver
 
 
 class CookieLogin(object):
     def __init__(self, url, username, password):
         self.username = username
         self.password = password
-        self.driver = webdriver.Chrome(executable_path=r"D:\Software\ChromePortable\chromedriver.exe")
+        self.driver = webdriver.Chrome(executable_path=selenium_driver())
         self.driver.get(url=url)
         self.set_cookie()
         self.is_login()

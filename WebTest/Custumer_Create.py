@@ -12,6 +12,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
+from WebTest.Selenium_driver_base import selenium_driver
 
 
 def excel_create(filename='集团客户测试结果.xls'):
@@ -207,7 +208,7 @@ class Logger(object):  # Log日志记录
 if __name__ == '__main__':
     # driver = webdriver.Firefox(firefox_binary=r"D:\Software\Mozilla Firefox\firefox.exe",
     #                           executable_path=r"D:\Software\Mozilla Firefox\geckodriver.exe")  # Firefox配置参数
-    driver = webdriver.Chrome(executable_path="D:\\Software\\ChromePortable\\chromedriver.exe")  # Chrome配置参数
+    driver = webdriver.Chrome(executable_path=selenium_driver())  # Chrome配置参数
     sys.stdout = Logger('./log/集团客户信息测试结果.log')
     main()
     time.sleep(5)

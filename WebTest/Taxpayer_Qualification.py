@@ -14,6 +14,7 @@ from PIL import Image, ImageEnhance
 from selenium.common.exceptions import *
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
+from WebTest.Selenium_driver_base import selenium_driver
 
 
 def get_auth_code(driver, codeEelement):
@@ -288,7 +289,7 @@ class Logger(object):  # Log日志记录
 if __name__ == '__main__':
     # driver = webdriver.Firefox(firefox_binary=r"D:\Software\Mozilla Firefox\firefox.exe",
     #                           executable_path=r"D:\Software\Mozilla Firefox\geckodriver.exe")  # Firefox配置参数
-    driver = webdriver.Chrome(executable_path=r"D:\Software\ChromePortable\chromedriver.exe")  # Chrome配置参数
+    driver = webdriver.Chrome(executable_path=selenium_driver())  # Chrome配置参数
     sys.stdout = Logger('./log/纳税人资质创建日志.log')
     driver.minimize_window()
     runtime = input('请输入要添加多少条数据，最大值为{}：'.format(len(excel_by_index())))

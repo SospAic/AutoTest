@@ -2,6 +2,7 @@ import json
 import time
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
+from WebTest.Selenium_driver_base import selenium_driver
 
 
 def main():
@@ -24,7 +25,7 @@ def main():
 
 
 if __name__ == '__main__':
-    driver = webdriver.Chrome(executable_path=r"D:\Software\ChromePortable\chromedriver.exe")  # Chrome配置参数
+    driver = webdriver.Chrome(executable_path=selenium_driver())  # Chrome配置参数
     driver.get('http://10.124.156.55/portal-web/index.jsp')
     print('打开页面')
     driver.implicitly_wait(10)

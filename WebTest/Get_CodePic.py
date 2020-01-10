@@ -2,12 +2,13 @@ import urllib.request
 import random
 import time
 from selenium import webdriver
+from WebTest.Selenium_driver_base import selenium_driver
 
 
 def get_pic(runtime=1):
     image = 'http://10.124.156.55/portal-web/portal/LoginController/vcode.do?1553828805242'
     random_num = random.randint(1, 1000)
-    driver = webdriver.Chrome(executable_path=r"D:\Software\ChromePortable\chromedriver.exe")
+    driver = webdriver.Chrome(executable_path=selenium_driver())
     driver.implicitly_wait(10)
     driver.get(image)
     for pic in range(runtime):
