@@ -14,7 +14,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-
+import Selenium_driver_base as setdriver
 
 # 匹配图片，适用有图库（多张）的情况
 def match_source(image):
@@ -377,7 +377,7 @@ def main(key='证券', page=1, path='./output_file/Code_data.xls'):
 if __name__ == '__main__':
     except_check = Counter()
     sys.stdout = Logger('./log/抓取信用代码证日志.log')
-    driver = webdriver.Chrome(executable_path=r"D:\Software\ChromePortable\chromedriver.exe")
+    driver = webdriver.Chrome(executable_path=setdriver.selenium_driver())
     driver.implicitly_wait(10)
     driver.minimize_window()
     code_result = []
