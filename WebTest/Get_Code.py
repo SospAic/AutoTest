@@ -127,6 +127,7 @@ def restart_program():
 # 创建表格
 def excel_create(file_path):
     create_num = str(random.randint(1, 1000))
+    # create_date = time.strftime('%Y%m%d', time.localtime(time.time())) # 创建日期，可配合随机码使用
     if os.path.exists('./output_file/Code_data.xls'):
         # 打开已有表
         old = xlrd.open_workbook('./output_file/Code_data.xls', formatting_info=True)
@@ -245,7 +246,7 @@ def get_code(page_num=1):
                     'div.result-footer > div:nth-child(1) > ul > li:nth-child(%s) '
                     '> a' % (select_page + 2))
                 page.click()
-                time.sleep(3)
+                time.sleep(1)
         print('查询结束，总计{}页'.format(page_num))
     except TimeoutException:
         print('抓取中断，尝试重新登录')
@@ -262,7 +263,7 @@ def get_code(page_num=1):
             print('关键字有误，请检查页面提示信息')
         else:
             print('抓取元素失败')
-        time.sleep(5)
+        time.sleep(1)
         driver.quit()
 
 
@@ -290,7 +291,7 @@ def login(value_key=''):
         driver.find_element_by_xpath(
             '//*[@id="web-content"]/div/div[2]/div/div[2]/div/div[3]/div[2]/div[3]/input').send_keys('wocaonima486')
         ActionChains(driver).send_keys(Keys.ENTER).perform()
-        time.sleep(3)
+        time.sleep(1)
         if is_exist_element('/html/body/div[10]/div[2]/div[2]/div[1]/div[2]/div[1]'):
             pass
         else:
@@ -352,18 +353,18 @@ def login(value_key=''):
             ActionChains(driver).move_by_offset(xoffset=1, yoffset=0).perform()
             # 放开圆球
             ActionChains(driver).pause(random.randint(6, 14) / 10).release(slideblock).perform()
-            time.sleep(2)
+            time.sleep(1)
             if is_exist_element('//*[@id="web-content"]/div/div[1]/div[2]/div[4]/div'):
                 verify_check = False
             else:
                 try:
                     driver.find_element_by_xpath('/html/body/div[10]/div[2]/div[2]/div[1]/div[3]/a[1]').click()
                     ActionChains(driver).click(slideblock).perform()
-                    time.sleep(3)
+                    time.sleep(1)
                     continue
                 except NoSuchElementException:
                     verify_check = False
-    time.sleep(3)
+    time.sleep(1)
 
 
 # 等于Class.__init__
