@@ -1,3 +1,6 @@
+pymysql
+requests
+Appium-Python-Client
 numpy>=1.17.4
 Pillow>=6.2.1
 pytesseract>=0.3.0
