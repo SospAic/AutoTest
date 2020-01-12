@@ -1,5 +1,6 @@
 import os
 import threading
+import time
 
 
 class MyThread(threading.Thread):
@@ -53,23 +54,26 @@ def main(run_dir='WebTest', *run_list):
         print(e)
     check_turn = True
     while check_turn:
-        run_check = input('是否需要继续执行？(Y/N)')
-        # input_check = InputThreading('是否需要继续执行？(Y/N)，10s超时', '', 10)
-        # run_check = input_check.input_thread.get_result()
-        if run_check.lower() == 'n':
-            print('所有文件已运行完毕')
-            check_turn = False
-        elif run_check.lower() == 'y':
-            print('正在跳转...')
-            os.chdir('../')
-            choose_list()
-            check_turn = False
-        else:
-            print('您输入的数据有误，请重新输入')
+        try:
+            # run_check = input('是否需要继续执行？(Y/N)')
+            input_check = InputThreading('是否需要继续执行？(Y/N)，10s超时', '', 10)
+            run_check = input_check.input_thread.get_result()
+            if run_check.lower() == 'n':
+                print('所有文件已运行完毕')
+                check_turn = False
+            elif run_check.lower() == 'y':
+                print('正在跳转...')
+                os.chdir('../')
+                choose_list()
+                check_turn = False
+            else:
+                print('您输入的数据有误，请重新输入')
+        except AttributeError:
+            time.sleep(1)
+            continue
 
 
 def choose_list():
-    global choose_num
     dir_list = {1: 'AppTest', 2: 'MultiThreading', 3: 'WebTest'}
     choose_turn = True
     while choose_turn:
