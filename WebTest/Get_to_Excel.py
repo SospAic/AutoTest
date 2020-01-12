@@ -154,6 +154,6 @@ if __name__ == '__main__':
     sys.stdout = Logger('./log/测试结果.log')
     driver = webdriver.Chrome(executable_path=selenium_driver())
     main()
-    excel_create(r'./output_file/Code_data.xls')
+    excel_create(r'./output_file/Total_data.xls')
     # driver.execute_script("window.alert('执行完毕')")
     driver.quit()
