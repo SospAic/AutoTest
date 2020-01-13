@@ -1,6 +1,5 @@
 import os
 import threading
-import time
 
 
 class MyThread(threading.Thread):
@@ -27,6 +26,8 @@ class InputThreading:
         self.input_thread.daemon = True
         self.wait_thread.start()
         self.input_thread.start()
+        self.wait_thread.join(time_out)  # 加入阻塞及超时时间
+        self.input_thread.join(time_out)  # 加入阻塞及超时时间
 
     def get_input(self, in_text=None, out_text=None):
         num = input(in_text)
@@ -54,10 +55,10 @@ def main(run_dir='WebTest', *run_list):
         print(e)
     check_turn = True
     while check_turn:
+        # run_check = input('是否需要继续执行？(Y/N)')
+        input_check = InputThreading('是否需要继续执行？(Y/N)，10s超时\n', '', 10)
+        run_check = input_check.input_thread.get_result()
         try:
-            # run_check = input('是否需要继续执行？(Y/N)')
-            input_check = InputThreading('是否需要继续执行？(Y/N)，10s超时', '', 10)
-            run_check = input_check.input_thread.get_result()
             if run_check.lower() == 'n':
                 print('所有文件已运行完毕')
                 check_turn = False
@@ -69,43 +70,48 @@ def main(run_dir='WebTest', *run_list):
             else:
                 print('您输入的数据有误，请重新输入')
         except AttributeError:
-            time.sleep(1)
-            continue
+            print('输入超时，默认退出')
+            check_turn = False
 
 
 def choose_list():
+    global choose_num
     dir_list = {1: 'AppTest', 2: 'MultiThreading', 3: 'WebTest'}
     choose_turn = True
     while choose_turn:
-        choose_num = input("请输入执行文件夹序号：{}\n".format(dir_list))
-        choose_num = int(choose_num)
-        if choose_num == 1 or choose_num == 2 or choose_num == 3:
-            os.chdir('./{}'.format(dir_list[choose_num]))
-            choose_turn = False
-        else:
-            print('您输入的序号有误，请重新输入')
-    dirs = os.listdir('./')
-    file_list = {}
-    a = 1
-    for i in dirs:  # 循环读取路径下的文件并筛选输出
-        if os.path.splitext(i)[1] == ".py":  # 筛选执行文件
-            a = a + 1
-            file_list[a - 1] = i
-            # print(i)
-    print(file_list)
-    file_choose = input('请输入要执行的文件序号，用空格隔开:\n').split()
-    final_list = []
-    for i in file_choose:
         try:
-            i = int(i)
-            final_list.append(file_list[i])
-        except KeyError:
-            print('输入数字有误，自动跳过')
+            choose_num = input("请输入执行文件夹序号：{}\n".format(dir_list))
+            choose_num = int(choose_num)
+            if choose_num == 1 or choose_num == 2 or choose_num == 3:
+                os.chdir('./{}'.format(dir_list[choose_num]))
+                choose_turn = False
+            else:
+                print('您输入的序号有误，请重新输入')
+            dirs = os.listdir('./')
+            file_list = {}
+            a = 1
+            for i in dirs:  # 循环读取路径下的文件并筛选输出
+                if os.path.splitext(i)[1] == ".py":  # 筛选执行文件
+                    a = a + 1
+                    file_list[a - 1] = i
+                    # print(i)
+            print(file_list)
+            file_choose = input('请输入要执行的文件序号，用空格隔开:\n').split()
+            final_list = []
+            for i in file_choose:
+                try:
+                    i = int(i)
+                    final_list.append(file_list[i])
+                except KeyError:
+                    print('输入数字有误，自动跳过')
+                    pass
+            print(final_list)
+            # print(os.getcwd())  # 查看当前工作目录
+            os.chdir('../')
+            main(dir_list[choose_num], final_list)
+        except ValueError:
+            print('请输入正确的数字序号')
             pass
-    print(final_list)
-    # print(os.getcwd())  # 查看当前工作目录
-    os.chdir('../')
-    main(dir_list[choose_num], final_list)
 
 
 if __name__ == '__main__':
