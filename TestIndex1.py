@@ -31,7 +31,7 @@ class InputThreading:
 
     def get_input(self, in_text=None, out_text=None):
         num = input(in_text)
-        print('')
+        # print(out_text)
         self.e.set()
         return num
 
