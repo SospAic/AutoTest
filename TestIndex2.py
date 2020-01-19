@@ -4,7 +4,6 @@ import TestIndex
 
 
 class App(wx.App):
-
     def OnInit(self):
         main_window = MainWindow(None, title='批处理图形化界面')
         main_window.Show()
@@ -16,6 +15,7 @@ class MainWindow(wx.Frame):
     def __init__(self, *args, size=(800, 600), **kwargs):
         super().__init__(*args, size=size, **kwargs)
         self.create_widgets()
+        self.Bind(wx.EVT_LISTBOX, self._get_elements, self.listBox)
 
     def create_widgets(self):
         self._create_menubar()
@@ -24,29 +24,27 @@ class MainWindow(wx.Frame):
 
     def control_window(self):
         panel = wx.Panel(self, -1)
-        self._create_menubar()
         wx.Choice(panel, -1, pos=(10, 10), size=(200, 160), choices=index_list, style=0,
                   validator=wx.DefaultValidator, name="choice")
+        self.listBox = wx.ListBox(panel, -1, (10, 40), (200, 400), index_list, wx.LB_MULTIPLE,
+                                  validator=wx.DefaultValidator, )
+        self.listBox.SetSelection(0)
+        print(self.listBox.FindString('MultiThreading'))
 
-        listBox = wx.ListBox(panel, -1, (10, 40), (200, 400), index_list, wx.LB_MULTIPLE,
-                             validator=wx.DefaultValidator, )
-        listBox.SetSelection(0)
-        # listBox.Clear()
-        print(listBox.FindString('eight'))
-
-        listText = wx.StaticText(panel, -1, '示例文本', (230, 15), (200, 15), style=0, name="staticText")
-        listText.AcceptsFocus()
-        listText.SetLabelText('Hello World')
+        self.listText = wx.StaticText(panel, -1, '示例文本', (230, 15), (200, 15), style=0, name="staticText")
+        self.listText.SetLabelText('Hello World')
         indexFont = wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL, underline=False, faceName="",
                             encoding=wx.FONTENCODING_DEFAULT)
-        submit_button = wx.ToggleButton(panel, -1, u"确定", (10, 460), size=wx.DefaultSize, style=0)
-        cancel_button = wx.ToggleButton(panel, -1, u"取消", (120, 460), size=wx.DefaultSize, style=0)
-        MultiCheckbox = wx.CheckBox(panel, -1, '示例多选框', (230, 45), size=wx.DefaultSize, style=0, name="checkBox")
-        self.Bind(wx.EVT_BUTTON, self.loginSys, submit_button)
+        self.submit_button = wx.Button(panel, -1, u"确定", (10, 460), size=wx.DefaultSize, style=0)
+        self.cancel_button = wx.Button(panel, -1, u"取消", (120, 460), size=wx.DefaultSize, style=0)
+        self.MultiCheckbox = wx.CheckBox(panel, -1, '示例多选框', (230, 45), size=wx.DefaultSize, style=0, name="checkBox")
+
+    def _get_elements(self, event):
+        self.listBox = event.GetEventObject()
+        print("选择{0}".format(self.listBox.GetSelections()))
 
     def _create_menubar(self):
         menubar = wx.MenuBar()
-
         menus = {
             'File': (
                 (wx.ID_NEW, 'New\tCtrl+N', 'New file', self.file_new),
@@ -80,8 +78,10 @@ class MainWindow(wx.Frame):
 
 class ProgramControl:
     def __init__(self):
+        pass
 
-    def change_dir(self, dir_num):
+    @staticmethod
+    def change_dir(dir_num=0):
         os.chdir('./{}'.format(index_list[dir_num]))
 
 
