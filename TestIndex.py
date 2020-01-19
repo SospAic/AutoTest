@@ -54,8 +54,6 @@ def main(run_dir='WebTest', *run_list):
     check_turn = True
     while check_turn:
         run_check = input('是否需要继续执行？(Y/N)')
-        # input_check = InputThreading('是否需要继续执行？(Y/N)，10s超时', '', 10)
-        # run_check = input_check.input_thread.get_result()
         if run_check.lower() == 'n':
             print('所有文件已运行完毕')
             check_turn = False

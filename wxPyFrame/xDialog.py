@@ -53,3 +53,8 @@ class InputDialog(wx.Dialog):
 
     def cancleEvent(self, event):
         self.Destroy()  # 销毁隐藏Dialog
+
+
+if __name__ == '__main__':
+    app = InputDialog()
+    app.InitUI()
