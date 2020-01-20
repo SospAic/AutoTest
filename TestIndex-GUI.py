@@ -1,46 +1,10 @@
 import logging
 import os
 import sys
+import time
+
 import wx.lib.newevent
 import wx
-import TestIndex
-
-
-# wxLogEvent, EVT_WX_LOG_EVENT = wx.lib.newevent.NewEvent()
-#
-#
-# class wxLogHandler(logging.Handler):
-#     """
-#     A handler class which sends log strings to a wx object
-#     """
-#
-#     def __init__(self, wxdest=None):
-#         """
-#         Initialize the handler
-#         @param wxdest: the destination object to post the event to
-#         @type wxdest: wx.Window
-#         """
-#         logging.Handler.__init__(self)
-#         self.wxDest = wxdest
-#         self.level = logging.DEBUG
-#
-#     def flush(self):
-#         """
-#         does nothing for this handler
-#         """
-#
-#     def emit(self, record):
-#         """
-#         Emit a record.
-# """
-#         try:
-#             msg = self.format(record)
-#             evt = wxLogEvent(message=msg, levelname=record.levelname)
-#             wx.PostEvent(self.wxDest, evt)
-#         except (KeyboardInterrupt, SystemExit):
-#             raise
-#         except:
-#             self.handleError(record)
 
 
 class App(wx.App):
@@ -57,7 +21,6 @@ class MainWindow(wx.Frame):
         self.create_widgets()
         self.Bind(wx.EVT_LISTBOX, self._get_dir_elements, self.listBox)
         self.Bind(wx.EVT_CHOICE, self._get_dir, self.menu_select)
-        # self.Bind(EVT_WX_LOG_EVENT, self.console_log)
 
     def create_widgets(self):
         self._create_menubar()
@@ -77,7 +40,7 @@ class MainWindow(wx.Frame):
         indexFont = wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL, underline=False, faceName="",
                             encoding=wx.FONTENCODING_DEFAULT)
         self.submit_button = wx.Button(self.panel, -1, u"确定", (20, 460), size=wx.DefaultSize, style=0)
-        self.cancel_button = wx.Button(self.panel, -1, u"取消", (130, 460), size=wx.DefaultSize, style=0)
+        self.cancel_button = wx.Button(self.panel, -1, u"退出", (130, 460), size=wx.DefaultSize, style=0)
         self.MultiCheckbox = wx.CheckBox(self.panel, -1, '示例多选框', (230, 45), size=wx.DefaultSize, style=0,
                                          name="checkBox")
 
@@ -127,24 +90,11 @@ class MainWindow(wx.Frame):
         self.SetMenuBar(menubar)
 
     def _console_log(self):
-        # msg = event.message.strip("\r") + "\n"
-        # self.listInput.AppendText(msg)  # or whatevery
-        # event.Skip()
         self.listInput = wx.TextCtrl(self.panel, -1, '', (240, 230), (525, 220),
                                      style=wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL,
                                      name="InputText")
-        wx.CallAfter(self.dologging)
-        self.log_window = wx.LogTextCtrl(self.listInput)
-        wx.Log.SetActiveTarget(self.log_window)
-
-    def write(self, s):
-        self.listInput.AppendText(s)
-
-    def dologging(self):
-        print('do logging...')
-        # ~ logging.warning('This message should go to my wxTextCtrl...')
-        wx.LogMessage('sys.stderr')
-        wx.CallLater(3000, self.dologging)
+        redir = RedirectText(self.listInput)
+        sys.stdout = redir
 
     def file_new(self, event):
         print('file_new')
@@ -159,6 +109,16 @@ class MainWindow(wx.Frame):
         print('file_saveas')
 
 
+class RedirectText:
+    def __init__(self, aWxTextCtrl):
+        self.out = aWxTextCtrl
+
+    def write(self, string):
+        time_now = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+        self.out.WriteText(' | {} | '.format(time_now))
+        self.out.WriteText(string)
+
+
 # TODO:无效类
 class ProgramControl:
     def __init__(self):
@@ -170,11 +130,11 @@ class ProgramControl:
 
 
 def main():
-    # app = App(redirect=True, filename=r'./GUI输出日志.txt')
-    app = App()
+    app = App(redirect=False)
     app.MainLoop()
 
 
 if __name__ == '__main__':
     index_list = ['AppTest', 'MultiThreading', 'WebTest']
+    sys.stdout.flush()
     main()
