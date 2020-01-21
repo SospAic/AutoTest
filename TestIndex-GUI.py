@@ -2,6 +2,7 @@ import logging
 import os
 import sys
 import time
+import traceback
 
 import wx.lib.newevent
 import wx
@@ -18,11 +19,19 @@ class App(wx.App):
 class MainWindow(wx.Frame):
     def __init__(self, *args, size=(800, 600), **kwargs):
         super().__init__(*args, size=size, **kwargs)
+        self.SetMaxSize((800, 600))
+        self.SetMinSize((800, 600))
         self.create_widgets()
         self.Bind(wx.EVT_LISTBOX, self._get_dir_elements, self.listBox)
         self.Bind(wx.EVT_CHOICE, self._get_dir, self.menu_select)
         self.Bind(wx.EVT_BUTTON, self._submit_event, self.submit_button)
+        self.Bind(wx.EVT_BUTTON, self.pg_exit, self.exit_button)
         # self.Bind(wx.EVT_MENU, self.menu_handler)  # 第二种事件绑定方式
+        self.Bind(wx.EVT_ENTER_WINDOW, self.OnEnterWindow)
+
+    def OnEnterWindow(self, event):
+        print("鼠标进入")
+        self.SetStatusText("鼠标进入")
 
     def create_widgets(self):
         self._create_menubar()
@@ -34,17 +43,15 @@ class MainWindow(wx.Frame):
         self.panel = wx.Panel(self, -1)
         self.menu_select = wx.Choice(self.panel, -1, pos=(20, 15), size=(200, 160), choices=index_list, style=0,
                                      validator=wx.DefaultValidator, name="choice")
-        self.check_list = ['1', '2', '3']
+        self.check_list = []
         self.listBox = wx.ListBox(self.panel, -1, (20, 50), (200, 400), self.check_list, wx.LB_MULTIPLE,
                                   validator=wx.DefaultValidator, )
-        self.listText = wx.StaticText(self.panel, -1, '示例文本', (230, 15), (200, 15), style=0, name="staticText")
+        self.listText = wx.StaticText(self.panel, -1, '示例文本', (240, 20), (200, 15), style=0, name="staticText")
         self.listText.SetLabelText('Hello World')
         indexFont = wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL, underline=False, faceName="",
                             encoding=wx.FONTENCODING_DEFAULT)
         self.submit_button = wx.Button(self.panel, -1, u"确定", (20, 460), size=wx.DefaultSize, style=0)
-        self.cancel_button = wx.Button(self.panel, -1, u"退出", (130, 460), size=wx.DefaultSize, style=0)
-        self.MultiCheckbox = wx.CheckBox(self.panel, -1, '示例多选框', (230, 45), size=wx.DefaultSize, style=0,
-                                         name="checkBox")
+        self.exit_button = wx.Button(self.panel, -1, u"退出", (130, 460), size=wx.DefaultSize, style=0)
 
     def _get_dir_elements(self, event):
         self.listBox = event.GetEventObject()
@@ -76,11 +83,13 @@ class MainWindow(wx.Frame):
         menubar = wx.MenuBar()
         menus = {
             '文件': (
-                (wx.ID_SAVEAS, '导出..\tCtrl+E', '将运行结果导出至文本文件', self.file_export, 1),
+                (wx.ID_SAVEAS, '导出运行结果..\tCtrl+E', '将运行结果导出至文本文件', self.file_export, 1),
                 (wx.ID_CLOSE, '退出\tCtrl+Q', '退出程序', self.pg_exit, 2),
+            ),
+            '其他': (
+                (wx.ID_ABOUT, '关于', '关于软件', self._menu_about, 2),
             )
         }
-
         for title, items in menus.items():
             menu = wx.Menu()
             for id_, label, help_string, handler, num in items:
@@ -93,7 +102,7 @@ class MainWindow(wx.Frame):
         self.SetMenuBar(menubar)
 
     def _console_log(self):
-        self.listInput = wx.TextCtrl(self.panel, -1, '', (240, 230), (525, 220),
+        self.listInput = wx.TextCtrl(self.panel, -1, '', (240, 50), (525, 400),
                                      style=wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL,
                                      name="InputText")
         redir = RedirectText(self.listInput)
@@ -115,7 +124,7 @@ class MainWindow(wx.Frame):
         # print(self.listInput.GetValue())
 
     def pg_exit(self, event):
-        dial = wx.MessageDialog(None, "请问确定退出吗?", "提示",
+        dial = wx.MessageDialog(None, "确定退出吗?", "提示",
                                 wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
         ret = dial.ShowModal()
 
@@ -127,18 +136,22 @@ class MainWindow(wx.Frame):
 
     def _submit_event(self, event):
         self.submit_button = event.GetEventObject()
-        dial = wx.MessageDialog(None, "请问确定运行选中的{}项吗?".format(len(self.listBox.GetSelections())), "提示",
-                                wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
-        ret = dial.ShowModal()
-
-        if ret == wx.ID_YES:
-            self.select_file = []
-            for file_num in self.listBox.GetSelections():
-                self.select_file.append(self.check_list[file_num])
-            self.run_path(self.select_dir, self.select_file)
+        if len(self.listBox.GetSelections()) <= 0:
+            warning = wx.MessageDialog(None, "还未选定文件，请重新选择", "错误",
+                                       wx.OK | wx.ICON_QUESTION)
+            warning.ShowModal()
         else:
-            pass
-            # event.Veto()
+            dial = wx.MessageDialog(None, "确定运行选中的{}项吗?".format(len(self.listBox.GetSelections())), "提示",
+                                    wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
+            ret = dial.ShowModal()
+            if ret == wx.ID_YES:
+                self.select_file = []
+                for file_num in self.listBox.GetSelections():
+                    self.select_file.append(self.check_list[file_num])
+                self.run_path(self.select_dir, self.select_file)
+            else:
+                pass
+                # event.Veto()
         # print(self.select_file)
 
     def run_path(self, run_dir='WebTest', *run_list):
@@ -151,11 +164,16 @@ class MainWindow(wx.Frame):
                 if p == 0:
                     print("{}执行结果:成功".format(i))
                 else:
-                    print("{}执行结果:失败".format(i))
+                    print("{}执行结果:失败，详情请见日志".format(i))
             os.chdir('../')
         except IndexError as e:
             os.chdir('../')
             print(e)
+
+    def _menu_about(self, event):
+        about = wx.MessageDialog(None, "v0.1  Copyright by adonet", "关于",
+                                 wx.OK | wx.ICON_QUESTION)
+        about.ShowModal()
 
     # 第二种事件绑定实现方式
     def menu_handler(self, event):
