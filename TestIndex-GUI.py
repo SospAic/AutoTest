@@ -21,6 +21,8 @@ class MainWindow(wx.Frame):
         self.create_widgets()
         self.Bind(wx.EVT_LISTBOX, self._get_dir_elements, self.listBox)
         self.Bind(wx.EVT_CHOICE, self._get_dir, self.menu_select)
+        self.Bind(wx.EVT_BUTTON, self._submit_event, self.submit_button)
+        # self.Bind(wx.EVT_MENU, self.menu_handler)  # 第二种事件绑定方式
 
     def create_widgets(self):
         self._create_menubar()
@@ -46,11 +48,13 @@ class MainWindow(wx.Frame):
 
     def _get_dir_elements(self, event):
         self.listBox = event.GetEventObject()
-        print("选择{0}".format(self.listBox.GetSelections()))
+        # print("选择{0}".format(self.listBox.GetSelections()))
 
     def _get_dir(self, event):
         self.menu_select = event.GetEventObject()
         select_num = self.menu_select.GetSelection()
+        self.select_dir = index_list[select_num]
+        # print(self.select_dir)
         if select_num > -1:
             os.chdir('./{}'.format(index_list[select_num]))
             dirs = os.listdir('./')
@@ -61,10 +65,9 @@ class MainWindow(wx.Frame):
                     # print(i)
             # print(file_list)
             self.check_list = file_list
-            print(self.check_list)
             self.listBox.Set(self.check_list)
             os.chdir('../')
-            print("选择{0}".format(self.menu_select.GetSelection()))
+            # print("选择{0}".format(self.menu_select.GetSelection()))
         else:
             print('索引值错误')
             pass
@@ -72,18 +75,18 @@ class MainWindow(wx.Frame):
     def _create_menubar(self):
         menubar = wx.MenuBar()
         menus = {
-            'File': (
-                (wx.ID_NEW, 'New\tCtrl+N', 'New file', self.file_new),
-                (wx.ID_OPEN, 'Open\tCtrl+O', 'Open file', self.file_open),
-                (wx.ID_SAVE, 'Save\tCtrl+S', 'Save file', self.file_save),
-                (wx.ID_SAVEAS, 'Save as\tCtrl+Shift+S', 'Save as', self.file_saveas)
+            '文件': (
+                (wx.ID_SAVEAS, '导出..\tCtrl+E', '将运行结果导出至文本文件', self.file_export, 1),
+                (wx.ID_CLOSE, '退出\tCtrl+Q', '退出程序', self.pg_exit, 2),
             )
         }
 
         for title, items in menus.items():
             menu = wx.Menu()
-            for id_, label, help_string, handler in items:
-                item = menu.Append(id_, label, help_string)
+            for id_, label, help_string, handler, num in items:
+                item = menu.Append(id_, label, help_string, kind=wx.ITEM_NORMAL)
+                if num != 2:
+                    menu.AppendSeparator()
                 self.Bind(wx.EVT_MENU, handler, item)
             menubar.Append(menu, title)
 
@@ -96,17 +99,67 @@ class MainWindow(wx.Frame):
         redir = RedirectText(self.listInput)
         sys.stdout = redir
 
-    def file_new(self, event):
-        print('file_new')
+    def file_export(self, event):
+        export_time = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
+        default_name = '{}执行记录.txt'.format(export_time)
+        self.wildcard = '文本文件(*.txt)|*.txt|所有文件(*.*)|*.*'
+        dlg = wx.FileDialog(self, '导出', os.getcwd(),
+                            defaultFile=default_name,
+                            style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
+                            wildcard=self.wildcard)
+        if dlg.ShowModal() == wx.ID_OK:
+            file = open(dlg.GetPath(), 'w')
+            file.write(self.listInput.GetValue())
+            file.close()
+            dlg.Destroy()
+        # print(self.listInput.GetValue())
 
-    def file_open(self, event):
-        print('file_open')
+    def pg_exit(self, event):
+        dial = wx.MessageDialog(None, "请问确定退出吗?", "提示",
+                                wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
+        ret = dial.ShowModal()
 
-    def file_save(self, event):
-        print('file_save')
+        if ret == wx.ID_YES:
+            self.Destroy()
+        else:
+            pass
+            # event.Veto()
 
-    def file_saveas(self, event):
-        print('file_saveas')
+    def _submit_event(self, event):
+        self.submit_button = event.GetEventObject()
+        dial = wx.MessageDialog(None, "请问确定运行选中的{}项吗?".format(len(self.listBox.GetSelections())), "提示",
+                                wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
+        ret = dial.ShowModal()
+
+        if ret == wx.ID_YES:
+            self.run_path(self.select_dir, self.check_list)
+        else:
+            pass
+            # event.Veto()
+
+    def run_path(self, run_dir='WebTest', *run_list):
+        os.chdir('./{}'.format(run_dir))
+        try:
+            for i in run_list[0]:
+                i = 'python {}.py'.format(i)
+                print("运行{}/{}".format(run_dir, i[7:]))
+                p = os.system(i)
+                if p == 0:
+                    print("{}执行结果:成功".format(i))
+                else:
+                    print("{}执行结果:失败".format(i))
+            os.chdir('../')
+        except IndexError as e:
+            os.chdir('../')
+            print(e)
+
+    # 第二种事件绑定实现方式
+    def menu_handler(self, event):
+        id = event.GetId()
+        if id == wx.ID_SAVEAS:
+            wx.MessageBox(u'导出文件', '导出..', wx.OK | wx.ICON_INFORMATION)
+        if id == wx.ID_CLOSE:
+            wx.MessageBox(u'退出程序', '提示', wx.OK | wx.ICON_INFORMATION)
 
 
 class RedirectText:
@@ -136,5 +189,4 @@ def main():
 
 if __name__ == '__main__':
     index_list = ['AppTest', 'MultiThreading', 'WebTest']
-    sys.stdout.flush()
     main()
