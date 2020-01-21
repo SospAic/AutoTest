@@ -132,10 +132,14 @@ class MainWindow(wx.Frame):
         ret = dial.ShowModal()
 
         if ret == wx.ID_YES:
-            self.run_path(self.select_dir, self.check_list)
+            self.select_file = []
+            for file_num in self.listBox.GetSelections():
+                self.select_file.append(self.check_list[file_num])
+            self.run_path(self.select_dir, self.select_file)
         else:
             pass
             # event.Veto()
+        # print(self.select_file)
 
     def run_path(self, run_dir='WebTest', *run_list):
         os.chdir('./{}'.format(run_dir))
