@@ -247,6 +247,9 @@ class RedirectText:
         time_now = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
         self.out.WriteText(' | {} | {}'.format(time_now, string))
 
+    def flush(self):
+        pass
+
 
 # TODO:无效类
 class ProgramControl:
