@@ -1,6 +1,6 @@
 # coding=utf-8
-import wxPyFrame.contentFrame
-import wxPyFrame.loginFrame
+import wxPythonSimple.wxPyFrame.contentFrame
+import wxPythonSimple.wxPyFrame.loginFrame
 
 
 class GuiManager:
@@ -19,6 +19,6 @@ class GuiManager:
 
     def CreateFrame(self, type):
         if type == 0:
-            return wxPyFrame.loginFrame.LoginFrame(parent=None, id=type, UpdateUI=self.UpdateUI)
+            return wxPythonSimple.wxPyFrame.loginFrame.LoginFrame(parent=None, id=type, UpdateUI=self.UpdateUI)
         elif type == 1:
-            return wxPyFrame.contentFrame.ContentFrame(parent=None, id=type, UpdateUI=self.UpdateUI)
+            return wxPythonSimple.wxPyFrame.contentFrame.ContentFrame(parent=None, id=type, UpdateUI=self.UpdateUI)

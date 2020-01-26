@@ -19,6 +19,7 @@ class XPinst(wx.App):
                                style=wx.TE_MULTILINE | wx.TE_READONLY | wx.HSCROLL)
         redir = RedirectText(self.log)
         sys.stdout = redir
+
         print('test')
 
         self.frame.Show()

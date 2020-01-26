@@ -1,9 +1,6 @@
-import logging
 import os
 import sys
 import time
-import traceback
-
 import wx.lib.newevent
 import wx
 
@@ -69,7 +66,7 @@ class MainWindow(wx.Frame):
         # print(self.select_dir)
         if select_num > -1:
             os.chdir('./{}'.format(index_list[select_num]))
-            dirs = os.listdir('./')
+            dirs = os.listdir('../')
             file_list = []
             for i in dirs:  # 循环读取路径下的文件并筛选输出
                 if os.path.splitext(i)[1] == ".py":  # 筛选执行文件
@@ -78,7 +75,7 @@ class MainWindow(wx.Frame):
             # print(file_list)
             self.check_list = file_list
             self.listBox.Set(self.check_list)
-            os.chdir('../')
+            os.chdir('../../')
             # print("选择{0}".format(self.menu_select.GetSelection()))
         else:
             print('索引值错误')
@@ -134,7 +131,7 @@ class MainWindow(wx.Frame):
     # 退出按钮事件
     def pg_exit(self, event):
         dial = wx.MessageDialog(None, "确定退出吗?", "提示",
-                                wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
+                                wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING)
         ret = dial.ShowModal()
 
         if ret == wx.ID_YES:
@@ -148,11 +145,11 @@ class MainWindow(wx.Frame):
         self.submit_button = event.GetEventObject()
         if len(self.listBox.GetSelections()) <= 0:
             warning = wx.MessageDialog(None, "还未选定文件，请重新选择", "错误",
-                                       wx.OK | wx.ICON_QUESTION)
+                                       wx.OK | wx.ICON_ERROR)
             warning.ShowModal()
         else:
             dial = wx.MessageDialog(None, "确定运行选中的{}项吗?".format(len(self.listBox.GetSelections())), "提示",
-                                    wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
+                                    wx.YES_NO | wx.NO_DEFAULT | wx.ICON_INFORMATION)
             ret = dial.ShowModal()
             if ret == wx.ID_YES:
                 self.select_file = []
@@ -175,21 +172,21 @@ class MainWindow(wx.Frame):
         try:
             for i in run_list[0]:
                 i = 'python {}.py'.format(i)
-                print("运行{}/{}".format(run_dir, i[7:]))
+                print("运行{}/{}".format(run_dir, i[7:-3]))
                 p = os.system(i)
                 if p == 0:
-                    print("{}执行结果:成功".format(i))
+                    print("{}执行结果:成功".format(i[7:-3]))
                 else:
-                    print("{}执行结果:失败，详情请见日志".format(i))
-            os.chdir('../')
+                    print("{}执行结果:失败，详情请见日志".format(i[7:-3]))
+            os.chdir('../../')
         except IndexError as e:
-            os.chdir('../')
+            os.chdir('../../')
             print(e)
 
     # 关于按钮事件
     def _menu_about(self, event):
         about = wx.MessageDialog(None, "v0.1  Copyright by adonet", "关于",
-                                 wx.OK | wx.ICON_QUESTION)
+                                 wx.OK | wx.ICON_INFORMATION)
         about.ShowModal()
 
     # 搜索控件
@@ -226,8 +223,8 @@ class MainWindow(wx.Frame):
             self.listText.SetLabelText('退出程序')
             self.StatusBar.SetLabelText('退出程序')
         elif 767 >= pos.x >= 237 and 452 >= pos.y >= 47:
-            self.listText.SetLabelText('输出控制台，可记录文件执行的结果')
-            self.StatusBar.SetLabelText('输出控制台，可记录文件执行的结果')
+            self.listText.SetLabelText('输出控制台，可记录文件执行结果')
+            self.StatusBar.SetLabelText('输出控制台，可记录文件执行结果')
 
     # 第二种事件绑定实现方式
     def menu_handler(self, event):
@@ -245,10 +242,7 @@ class RedirectText:
 
     def write(self, string):
         time_now = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-        self.out.WriteText(' | {} | {}'.format(time_now, string))
-
-    def flush(self):
-        pass
+        self.out.AppendText(' | {} | {}'.format(time_now, string))
 
 
 # TODO:无效类

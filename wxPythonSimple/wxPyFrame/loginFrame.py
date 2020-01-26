@@ -2,8 +2,8 @@
 import wx
 # 导入wxPython中的通用Button
 import wx.lib.buttons as wxButton
-import wxPyFrame.xDialog
-from wxPyFrame.utils import load_image
+import wxPythonSimple.wxPyFrame.xDialog
+from wxPythonSimple.wxPyFrame.utils import load_image
 
 
 class LoginFrame(wx.Frame):
@@ -38,6 +38,6 @@ class LoginFrame(wx.Frame):
         self.UpdateUI(1)  # 更新UI-Frame
 
 
-class LoginDialog(wxPyFrame.xDialog.InputDialog):
+class LoginDialog(wxPythonSimple.wxPyFrame.xDialog.InputDialog):
     def __init__(self, func_callBack, themeColor):
-        wxPyFrame.xDialog.InputDialog.__init__(self, '登录系统', func_callBack, themeColor)
+        wxPythonSimple.wxPyFrame.xDialog.InputDialog.__init__(self, '登录系统', func_callBack, themeColor)

@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import wx
-import wxPyFrame.guiManager as FrameManager
+import wxPythonSimple.wxPyFrame.guiManager as FrameManager
 
 
 class MainAPP(wx.App):

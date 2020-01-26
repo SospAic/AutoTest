@@ -1,19 +1,68 @@
-import logging
 import os
 import sys
+import threading
 import time
-import traceback
-
+from threading import Thread
 import wx.lib.newevent
 import wx
+from wx.lib.pubsub import pub
 
+ID_START = wx.NewId()
+ID_STOP = wx.NewId()
+EVT_RESULT_ID = wx.NewId()
+
+def EVT_RESULT(win, func):
+    win.Connect(-1, -1, EVT_RESULT_ID, func)
+
+
+class ResultEvent(wx.PyEvent):
+
+    def __init__(self, data):
+        wx.PyEvent.__init__(self)
+        self.SetEventType(EVT_RESULT_ID)
+        self.data = data
+
+
+class WorkerThread(Thread):
+    def __init__(self, run_dir, run_list, notify_window):
+        # 线程实例化时立即启动
+        Thread.__init__(self)
+        self._notify_window = notify_window
+        self._want_abort = 0
+        self.run_dir = run_dir
+        self.run_list = run_list
+        self.start()
+
+    def run(self):
+        # 线程执行的代码
+        os.chdir('./{}'.format(self.run_dir))
+        num = 1
+        for i in self.run_list:
+            i = 'python {}.py'.format(i)
+            print("运行{}/{}".format(self.run_dir, i[7:-3]))
+            p = os.system(i)
+            if p == 0:
+                print("{}执行结果:成功".format(i[7:-3]))
+            else:
+                print("{}执行结果:失败，详情请见日志".format(i[7:-3]))
+            percent_num = int((num/len(self.run_list))*100)
+            # print(percent_num)
+            num = num + 1
+            wx.CallAfter(pub.sendMessage, "update", msg=percent_num)
+        os.chdir('../../')
+        if self._want_abort:
+            wx.PostEvent(self._notify_window, ResultEvent(None))
+            return
+       # wx.PostEvent(self._notify_window, ResultEvent('所有文件执行完毕'))
+
+    def abort(self):
+        self._want_abort = 1
 
 # 应用类
 class App(wx.App):
     def OnInit(self):
         main_window = MainWindow(None, title='批处理图形化界面')
         main_window.Show()
-        # self.SetTopWindow(main_window)
         return True
 
 
@@ -30,6 +79,12 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.pg_exit, self.exit_button)
         # self.Bind(wx.EVT_MENU, self.menu_handler)  # 第二种事件绑定方式
         self.Bind(wx.EVT_TEXT, self.search_input, self.searchinput)
+        self.Bind(wx.EVT_BUTTON, self.OnStart, id=ID_START)
+        self.Bind(wx.EVT_BUTTON, self.OnStop, id=ID_STOP)
+        EVT_RESULT(self, self.OnResult)
+        self.worker = None
+        pub.subscribe(self.updateDisplay, "update")
+        self.singal = threading.Event()
 
     # 绘制窗口
     def create_widgets(self):
@@ -55,6 +110,10 @@ class MainWindow(wx.Frame):
         self.searchinput = wx.TextCtrl(self.panel, -1, '', (20, 50), size=(200, 25),
                                        style=wx.TE_LEFT | wx.TE_PROCESS_ENTER, name="SearchText")
         self.searchinput.SetMaxLength(20)
+        self.test_button = wx.Button(self.panel, ID_START, u"暂停", (240, 460), size=wx.DefaultSize, style=0)
+        self.cancle_button = wx.Button(self.panel, ID_STOP, u"终止", (350, 460), size=wx.DefaultSize, style=0)
+        self.m_gauge1 = wx.Gauge(self.panel, wx.ID_ANY, 100, (0, 500), (800, 20), wx.GA_HORIZONTAL)
+        self.m_gauge1.SetValue(0)
 
     # 暂时无用
     def _get_dir_elements(self, event):
@@ -69,7 +128,7 @@ class MainWindow(wx.Frame):
         # print(self.select_dir)
         if select_num > -1:
             os.chdir('./{}'.format(index_list[select_num]))
-            dirs = os.listdir('./')
+            dirs = os.listdir('../')
             file_list = []
             for i in dirs:  # 循环读取路径下的文件并筛选输出
                 if os.path.splitext(i)[1] == ".py":  # 筛选执行文件
@@ -78,7 +137,7 @@ class MainWindow(wx.Frame):
             # print(file_list)
             self.check_list = file_list
             self.listBox.Set(self.check_list)
-            os.chdir('../')
+            os.chdir('../../')
             # print("选择{0}".format(self.menu_select.GetSelection()))
         else:
             print('索引值错误')
@@ -134,7 +193,7 @@ class MainWindow(wx.Frame):
     # 退出按钮事件
     def pg_exit(self, event):
         dial = wx.MessageDialog(None, "确定退出吗?", "提示",
-                                wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
+                                wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING)
         ret = dial.ShowModal()
 
         if ret == wx.ID_YES:
@@ -148,48 +207,31 @@ class MainWindow(wx.Frame):
         self.submit_button = event.GetEventObject()
         if len(self.listBox.GetSelections()) <= 0:
             warning = wx.MessageDialog(None, "还未选定文件，请重新选择", "错误",
-                                       wx.OK | wx.ICON_QUESTION)
+                                       wx.OK | wx.ICON_ERROR)
             warning.ShowModal()
         else:
             dial = wx.MessageDialog(None, "确定运行选中的{}项吗?".format(len(self.listBox.GetSelections())), "提示",
-                                    wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
+                                    wx.YES_NO | wx.NO_DEFAULT | wx.ICON_INFORMATION)
             ret = dial.ShowModal()
             if ret == wx.ID_YES:
                 self.select_file = []
                 try:
                     for file_num in self.listBox.GetSelections():
                         self.select_file.append(self.search_result[file_num])
-                    self.run_path(self.select_dir, self.select_file)
+                    self.thread = WorkerThread(self.select_dir, self.select_file, notify_window=None)
                 except AttributeError:
                     for file_num in self.listBox.GetSelections():
                         self.select_file.append(self.check_list[file_num])
-                    self.run_path(self.select_dir, self.select_file)
+                    self.thread = WorkerThread(self.select_dir, self.select_file, notify_window=None)
             else:
                 pass
                 # event.Veto()
         # print(self.select_file)
 
-    # 文件执行
-    def run_path(self, run_dir='WebTest', *run_list):
-        os.chdir('./{}'.format(run_dir))
-        try:
-            for i in run_list[0]:
-                i = 'python {}.py'.format(i)
-                print("运行{}/{}".format(run_dir, i[7:]))
-                p = os.system(i)
-                if p == 0:
-                    print("{}执行结果:成功".format(i))
-                else:
-                    print("{}执行结果:失败，详情请见日志".format(i))
-            os.chdir('../')
-        except IndexError as e:
-            os.chdir('../')
-            print(e)
-
     # 关于按钮事件
     def _menu_about(self, event):
         about = wx.MessageDialog(None, "v0.1  Copyright by adonet", "关于",
-                                 wx.OK | wx.ICON_QUESTION)
+                                 wx.OK | wx.ICON_INFORMATION)
         about.ShowModal()
 
     # 搜索控件
@@ -226,8 +268,36 @@ class MainWindow(wx.Frame):
             self.listText.SetLabelText('退出程序')
             self.StatusBar.SetLabelText('退出程序')
         elif 767 >= pos.x >= 237 and 452 >= pos.y >= 47:
-            self.listText.SetLabelText('输出控制台，可记录文件执行的结果')
-            self.StatusBar.SetLabelText('输出控制台，可记录文件执行的结果')
+            self.listText.SetLabelText('输出控制台，可记录文件执行结果')
+            self.StatusBar.SetLabelText('输出控制台，可记录文件执行结果')
+
+    def updateDisplay(self, msg):
+        t = msg
+        if isinstance(t, int):  # 如果是数字，说明线程正在执行，显示数字
+            self.listText.SetLabel("%s%%" % t)
+            self.m_gauge1.SetValue(t)
+        else:  # 否则线程未执行，将按钮重新开启
+            self.listText.SetLabel("%s" % t)
+            self.test_button.Enable()
+
+    def OnStart(self, event):
+        if not self.worker:
+            self.listText.SetLabel("线程暂停")
+            event.GetEventObject().Disable()
+
+    def OnStop(self, event):
+        if self.worker:
+            self.listText.SetLabel("正在终止")
+            self.worker.abort()
+
+    def OnResult(self, event):
+        if event.data is None:
+            self.listText.SetLabel('运行终止')
+            self.test_button.Enable()
+        else:
+            self.listText.SetLabel('运行结果: %s' % event.data)
+            self.test_button.Enable()
+        self.worker = None
 
     # 第二种事件绑定实现方式
     def menu_handler(self, event):
@@ -245,17 +315,7 @@ class RedirectText:
 
     def write(self, string):
         time_now = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-        self.out.WriteText(' | {} | {}'.format(time_now, string))
-
-
-# TODO:无效类
-class ProgramControl:
-    def __init__(self):
-        pass
-
-    @staticmethod
-    def change_dir(dir_num=0):
-        os.chdir('./{}'.format(index_list[dir_num]))
+        self.out.AppendText(' | {} | {}'.format(time_now, string))
 
 
 def main():
