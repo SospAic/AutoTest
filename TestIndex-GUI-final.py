@@ -187,8 +187,7 @@ class MainWindow(wx.Frame):
 
     # 退出按钮事件
     def pg_exit(self, event):
-        dial = wx.MessageDialog(None, "确定退出吗?", "提示",
-                                wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING)
+        dial = wx.MessageDialog(None, "确定退出吗?", "提示", wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING)
         ret = dial.ShowModal()
 
         if ret == wx.ID_YES:
@@ -201,8 +200,7 @@ class MainWindow(wx.Frame):
     def _submit_event(self, event):
         self.submit_button = event.GetEventObject()
         if len(self.listBox.GetSelections()) <= 0:
-            warning = wx.MessageDialog(None, "还未选定文件，请重新选择", "错误",
-                                       wx.OK | wx.ICON_ERROR)
+            warning = wx.MessageDialog(None, "还未选定文件，请重新选择", "错误", wx.OK | wx.ICON_ERROR)
             warning.ShowModal()
         else:
             dial = wx.MessageDialog(None, "确定运行选中的{}项吗?".format(len(self.listBox.GetSelections())), "提示",
