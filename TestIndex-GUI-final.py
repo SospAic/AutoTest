@@ -72,6 +72,8 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.OnPause, self.pause_button)
         self.Bind(wx.EVT_BUTTON, self.OnStop, self.cancel_button)
         pub.subscribe(self.updateDisplay, "update")
+        icon = wx.Icon(name='Tools_icon.ico', type=wx.BITMAP_TYPE_ICO)
+        self.SetIcon(icon)
 
     # 绘制窗口
     def create_widgets(self):
@@ -164,19 +166,24 @@ class MainWindow(wx.Frame):
 
     # 导出运行记录
     def file_export(self, event):
-        export_time = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        default_name = '{}执行记录.txt'.format(export_time)
-        self.wildcard = '文本文件(*.txt)|*.txt|所有文件(*.*)|*.*'
-        dlg = wx.FileDialog(self, '导出', os.getcwd(),
-                            defaultFile=default_name,
-                            style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
-                            wildcard=self.wildcard)
-        if dlg.ShowModal() == wx.ID_OK:
-            file = open(dlg.GetPath(), 'w')
-            file.write(self.listInput.GetValue())
-            file.close()
-            dlg.Destroy()
-        # print(self.listInput.GetValue())
+        if self.listInput.GetValue() == '':
+            dial = wx.MessageDialog(None, "还未执行过文件，请先执行", "提示",
+                             wx.OK | wx.ICON_INFORMATION)
+            dial.ShowModal()
+        else:
+            export_time = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
+            default_name = '{}执行记录.txt'.format(export_time)
+            self.wildcard = '文本文件(*.txt)|*.txt|所有文件(*.*)|*.*'
+            dlg = wx.FileDialog(self, '导出', os.getcwd(),
+                                defaultFile=default_name,
+                                style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT,
+                                wildcard=self.wildcard)
+            if dlg.ShowModal() == wx.ID_OK:
+                file = open(dlg.GetPath(), 'w')
+                file.write(self.listInput.GetValue())
+                file.close()
+                dlg.Destroy()
+            # print(self.listInput.GetValue())
 
     # 退出按钮事件
     def pg_exit(self, event):
@@ -225,7 +232,7 @@ class MainWindow(wx.Frame):
 
     # 关于按钮事件
     def _menu_about(self, event):
-        about = wx.MessageDialog(None, "v0.1  Copyright by adonet", "关于",
+        about = wx.MessageDialog(None, "v0.6  Copyright by adonet", "关于",
                                  wx.OK | wx.ICON_INFORMATION)
         about.ShowModal()
 
