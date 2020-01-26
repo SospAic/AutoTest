@@ -6,9 +6,6 @@ import wx.lib.newevent
 import wx
 from wx.lib.pubsub import pub
 
-ID_PAUSE = wx.NewId()
-ID_STOP = wx.NewId()
-
 
 class WorkerThread(threading.Thread):
     def __init__(self, run_dir, run_list, *args, **kwargs):
@@ -72,8 +69,8 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.pg_exit, self.exit_button)
         # self.Bind(wx.EVT_MENU, self.menu_handler)  # 第二种事件绑定方式
         self.Bind(wx.EVT_TEXT, self.search_input, self.searchinput)
-        self.Bind(wx.EVT_BUTTON, self.OnPause, id=ID_PAUSE)
-        self.Bind(wx.EVT_BUTTON, self.OnStop, id=ID_STOP)
+        self.Bind(wx.EVT_BUTTON, self.OnPause, self.pause_button)
+        self.Bind(wx.EVT_BUTTON, self.OnStop, self.cancel_button)
         pub.subscribe(self.updateDisplay, "update")
 
     # 绘制窗口
@@ -100,12 +97,12 @@ class MainWindow(wx.Frame):
         self.searchinput = wx.TextCtrl(self.panel, -1, '', (20, 50), size=(200, 25),
                                        style=wx.TE_LEFT | wx.TE_PROCESS_ENTER, name="SearchText")
         self.searchinput.SetMaxLength(20)
-        self.test_button = wx.Button(self.panel, ID_PAUSE, u"暂停", (240, 460), size=wx.DefaultSize, style=0)
-        self.cancle_button = wx.Button(self.panel, ID_STOP, u"终止", (350, 460), size=wx.DefaultSize, style=0)
+        self.pause_button = wx.Button(self.panel, wx.ID_ANY, u"暂停", (240, 460), size=wx.DefaultSize, style=0)
+        self.cancel_button = wx.Button(self.panel, wx.ID_ANY, u"终止", (350, 460), size=wx.DefaultSize, style=0)
         self.m_gauge1 = wx.Gauge(self.panel, wx.ID_ANY, 100, (0, 500), (800, 20), wx.GA_HORIZONTAL)
         self.m_gauge1.SetValue(0)
-        self.test_button.Disable()
-        self.cancle_button.Disable()
+        self.pause_button.Disable()
+        self.cancel_button.Disable()
 
     # 暂时无用
     def _get_dir_elements(self, event):
@@ -219,8 +216,8 @@ class MainWindow(wx.Frame):
                 self.submit_button.Disable()
                 self.exit_button.Disable()
                 self.searchinput.Disable()
-                self.test_button.Enable()
-                self.cancle_button.Enable()
+                self.pause_button.Enable()
+                self.cancel_button.Enable()
             else:
                 pass
                 # event.Veto()
@@ -294,8 +291,8 @@ class MainWindow(wx.Frame):
                 self.submit_button.Enable()
                 self.exit_button.Enable()
                 self.searchinput.Enable()
-                self.test_button.Disable()
-                self.cancle_button.Disable()
+                self.pause_button.Disable()
+                self.cancel_button.Disable()
         else:  # 否则线程未执行，将按钮重新开启
             # self.listText.SetLabel("%s" % self.t)
             self.menu_select.Enable()
@@ -303,22 +300,30 @@ class MainWindow(wx.Frame):
             self.submit_button.Enable()
             self.exit_button.Enable()
             self.searchinput.Enable()
-            self.test_button.Disable()
-            self.cancle_button.Disable()
+            self.pause_button.Disable()
+            self.cancel_button.Disable()
 
     def OnPause(self, event):
-        if self.test_button.GetLabelText() == '暂停':
+        if self.pause_button.GetLabelText() == '暂停':
             self.thread.pause()
             self.listText.SetLabel("线程暂停")
-            self.test_button.SetLabel('恢复')
-        elif self.test_button.GetLabelText() == '恢复':
+            self.pause_button.SetLabel('恢复')
+        elif self.pause_button.GetLabelText() == '恢复':
             self.thread.resume()
             self.listText.SetLabel("线程恢复")
-            self.test_button.SetLabel('暂停')
+            self.pause_button.SetLabel('暂停')
 
     def OnStop(self, event):
         self.thread.stop()
         self.listText.SetLabel("停止运行")
+
+    # 键盘事件
+    def KeyBoardDownVer(self, event):
+        KeyCode = event.GetKeyCode()
+        if KeyCode == wx.WXK_CONTROL + wx.WXK_CONTROL_E:
+            self.file_export(event)
+        elif KeyCode == wx.WXK_CONTROL + wx.WXK_CONTROL_Q:
+            self.pg_exit(event)
 
     # 第二种事件绑定实现方式
     def menu_handler(self, event):

@@ -57,12 +57,14 @@ class WorkerThread(Thread):
 
 class MyForm(wx.Frame):
     def __init__(self, parent):
-        wx.Frame.__init__(self, parent, id=wx.ID_ANY, title="www.OmegaXYZ.com", pos=wx.DefaultPosition,
+        wx.Frame.__init__(self, parent, id=wx.ID_ANY, title="线程信号测试", pos=wx.DefaultPosition,
                           size=wx.Size(-1, -1), style=wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
         self.SetSizeHintsSz(wx.DefaultSize, wx.DefaultSize)
-        gSizer2 = wx.GridSizer(0, 3, 0, 0)
+        gSizer2 = wx.GridSizer(0, 4, 0, 0)
         self.m_button2 = wx.Button(self, wx.ID_ANY, "执行线程", wx.DefaultPosition, wx.DefaultSize, 0)
-        gSizer2.Add(self.m_button2, 0, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 5)
+        gSizer2.Add(self.m_button2, 0, wx.ALL | wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL, 5)
+        self.m_button3 = wx.Button(self, ID_STOP, 'Stop', pos=(0, 50))
+        gSizer2.Add(self.m_button3, 0, wx.ALL | wx.ALIGN_LEFT | wx.ALIGN_CENTER_VERTICAL, 5)
         self.m_staticText2 = wx.StaticText(self, wx.ID_ANY, "MyLabel", wx.DefaultPosition, wx.DefaultSize, 0)
         self.m_staticText2.Wrap(-1)
         gSizer2.Add(self.m_staticText2, 0, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 5)
@@ -76,8 +78,6 @@ class MyForm(wx.Frame):
         self.m_button2.Bind(wx.EVT_BUTTON, self.onButton)
         pub.subscribe(self.updateDisplay, "update")
         self.status = wx.StaticText(self, -1, '', pos=(0, 100))
-        self.m_button3 = wx.Button(self, ID_STOP, 'Stop', pos=(0, 50))
-        gSizer2.Add(self.m_button3, 0, wx.ALL | wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_CENTER_VERTICAL, 5)
         self.Bind(wx.EVT_BUTTON, self.OnStop, id=ID_STOP)
         EVT_RESULT(self, self.OnResult)
         self.worker = None
@@ -110,6 +110,7 @@ class MyForm(wx.Frame):
             self.m_staticText2.SetLabel('运行结果: %s' % event.data)
         # In either event, the worker is done
         self.worker = None
+        self.m_button2.Enable()
 
 
 if __name__ == "__main__":
