@@ -204,7 +204,7 @@ class MainWindow(wx.Frame):
             warning.ShowModal()
         else:
             dial = wx.MessageDialog(None, "确定运行选中的{}项吗?".format(len(self.listBox.GetSelections())), "提示",
-                                    wx.YES_NO | wx.NO_DEFAULT | wx.ICON_INFORMATION)
+                                    wx.YES_NO | wx.YES_DEFAULT | wx.ICON_INFORMATION)
             ret = dial.ShowModal()
             if ret == wx.ID_YES:
                 self.select_file = []
