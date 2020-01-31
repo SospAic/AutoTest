@@ -168,7 +168,7 @@ class MainWindow(wx.Frame):
     def file_export(self, event):
         if self.listInput.GetValue() == '':
             dial = wx.MessageDialog(None, "还未执行过文件，请先执行", "控制台导出",
-                                    wx.OK | wx.ICON_INFORMATION)
+                                    wx.OK | wx.ICON_ERROR)
             dial.ShowModal()
         else:
             export_time = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
