@@ -297,6 +297,7 @@ class MainWindow(wx.Frame):
                 self.submit_button.Enable()
                 self.exit_button.Enable()
                 self.searchinput.Enable()
+                self.menubar.Enable(wx.ID_CLOSE, enable=True)
                 self.pause_button.Disable()
                 self.cancel_button.Disable()
         else:  # 否则线程未执行，将按钮重新开启
@@ -306,6 +307,7 @@ class MainWindow(wx.Frame):
             self.submit_button.Enable()
             self.exit_button.Enable()
             self.searchinput.Enable()
+            self.menubar.Enable(wx.ID_CLOSE, enable=True)
             self.pause_button.Disable()
             self.cancel_button.Disable()
 
