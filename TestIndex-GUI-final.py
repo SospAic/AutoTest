@@ -136,7 +136,7 @@ class MainWindow(wx.Frame):
 
     # 创建菜单
     def _create_menubar(self):
-        menubar = wx.MenuBar()
+        self.menubar = wx.MenuBar()
         menus = {
             '文件': (
                 (wx.ID_SAVEAS, '导出运行结果..\tCtrl+E', '将运行结果导出至文本文件', self.file_export, 1),
@@ -147,14 +147,14 @@ class MainWindow(wx.Frame):
             )
         }
         for title, items in menus.items():
-            menu = wx.Menu()
+            self.menu = wx.Menu()
             for id_, label, help_string, handler, num in items:
-                item = menu.Append(id_, label, help_string, kind=wx.ITEM_NORMAL)
+                item = self.menu.Append(id_, label, help_string, kind=wx.ITEM_NORMAL)
                 if num != 2:
-                    menu.AppendSeparator()
+                    self.menu.AppendSeparator()
                 self.Bind(wx.EVT_MENU, handler, item)
-            menubar.Append(menu, title)
-        self.SetMenuBar(menubar)
+            self.menubar.Append(self.menu, title)
+        self.SetMenuBar(self.menubar)
 
     # 控制台输出
     def _console_log(self):
@@ -221,6 +221,7 @@ class MainWindow(wx.Frame):
                 self.submit_button.Disable()
                 self.exit_button.Disable()
                 self.searchinput.Disable()
+                self.menubar.Enable(wx.ID_CLOSE, enable=False)
                 self.pause_button.Enable()
                 self.cancel_button.Enable()
             else:
