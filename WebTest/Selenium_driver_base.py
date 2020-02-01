@@ -1,3 +1,4 @@
+# -*- coding:UTF-8 -*-
 import platform
 from selenium import webdriver
 

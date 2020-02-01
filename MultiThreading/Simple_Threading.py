@@ -1,3 +1,4 @@
+# -*- coding:UTF-8 -*-
 import threading
 
 from threading import Timer

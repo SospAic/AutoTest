@@ -1,3 +1,4 @@
+# -*- coding:UTF-8 -*-
 from pytesseract import *
 from PIL import Image
 from PIL import ImageEnhance
