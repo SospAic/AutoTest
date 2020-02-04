@@ -89,6 +89,7 @@ def choose_list():
                 choose_turn = False
             else:
                 print('您输入的序号有误，请重新输入')
+                continue
             dirs = os.listdir('./')
             file_list = {}
             a = 1
