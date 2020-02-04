@@ -13,6 +13,7 @@ def selenium_driver():
     elif os_name == 'Linux':
         driver_path = r"/usr/bin/chromedriver"
         print("Linux操作系统，driver路径已配置，路径为：{}".format(driver_path))
+        return driver_path
     elif os_name == 'Darwin':
         driver_path = r"/Applications/Google Chrome.app/Contents/MacOS/chromedriver"
         print("MacOS操作系统，driver路径已配置，路径为：{}".format(driver_path))
