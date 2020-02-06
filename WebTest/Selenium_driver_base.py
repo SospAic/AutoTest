@@ -22,3 +22,7 @@ def selenium_driver():
     else:
         print("其他操作系统，暂未配置driver路径")
 
+
+if __name__ == '__main__':
+    selenium_driver()
+    print(platform.system())
