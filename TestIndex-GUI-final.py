@@ -191,14 +191,18 @@ class MainWindow(wx.Frame):
 
     # 退出按钮事件
     def pg_exit(self, event):
-        dial = wx.MessageDialog(None, "确定退出吗?", "提示", wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING)
-        ret = dial.ShowModal()
-
-        if ret == wx.ID_YES:
-            self.Destroy()
+        if not self.exit_button.IsEnabled():
+            exit_error = wx.MessageDialog(None, "请等待完成或终止运行后再退出", "错误", wx.OK | wx.ICON_ERROR)
+            exit_error.ShowModal()
         else:
-            pass
-            # event.Veto()
+            dial = wx.MessageDialog(None, "确定退出吗?", "提示", wx.YES_NO | wx.NO_DEFAULT | wx.ICON_WARNING)
+            ret = dial.ShowModal()
+
+            if ret == wx.ID_YES:
+                self.Destroy()
+            else:
+                pass
+                # event.Veto()
 
     # 确定按钮事件
     def _submit_event(self, event):
