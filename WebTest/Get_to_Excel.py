@@ -106,10 +106,10 @@ def excel_create(file_path):  # 创建表格
                 break
             print("=" * max(col_table_length))  # 输出分隔符
         except ValueError as e:
-            print(e)
+            # print(e)
             break
         except IndexError as e:
-            print(e)
+            # print(e)
             break
 
     """保存表格到Excel"""
