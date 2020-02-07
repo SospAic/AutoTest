@@ -53,7 +53,7 @@ class WorkerThread(threading.Thread):
 # 应用类
 class App(wx.App):
     def OnInit(self):
-        main_window = MainWindow(None, title='批处理图形化界面')
+        main_window = MainWindow(None, title='批处理图形化界面', style=wx.CAPTION | wx.MINIMIZE_BOX | wx.CLOSE_BOX)
         main_window.Show()
         return True
 
@@ -69,6 +69,7 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_CHOICE, self._get_dir, self.menu_select)
         self.Bind(wx.EVT_BUTTON, self._submit_event, self.submit_button)
         self.Bind(wx.EVT_BUTTON, self.pg_exit, self.exit_button)
+        self.Bind(wx.EVT_CLOSE, self.pg_exit)
         # self.Bind(wx.EVT_MENU, self.menu_handler)  # 第二种事件绑定方式
         self.Bind(wx.EVT_TEXT, self.search_input, self.searchinput)
         self.Bind(wx.EVT_BUTTON, self.OnPause, self.pause_button)
