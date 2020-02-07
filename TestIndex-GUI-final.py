@@ -15,10 +15,10 @@ class WorkerThread(threading.Thread):
         super(WorkerThread, self).__init__(*args, **kwargs)
         self.run_dir = run_dir
         self.run_list = run_list
-        self.__flag = threading.Event()     # 用于暂停线程的标识
-        self.__flag.set()       # 设置为True
-        self.__running = threading.Event()      # 用于停止线程的标识
-        self.__running.set()      # 将running设置为True
+        self.__flag = threading.Event()  # 用于暂停线程的标识
+        self.__flag.set()  # 设置为True
+        self.__running = threading.Event()  # 用于停止线程的标识
+        self.__running.set()  # 将running设置为True
         self.start()
 
     def run(self):
@@ -34,21 +34,22 @@ class WorkerThread(threading.Thread):
                 print("{}执行结果:成功".format(i[7:-3]))
             else:
                 print("{}执行结果:失败，详情请见日志".format(i[7:-3]))
-            percent_num = int((num/len(self.run_list))*100)
+            percent_num = int((num / len(self.run_list)) * 100)
             # print(percent_num)
             num = num + 1
             wx.CallAfter(pub.sendMessage, "update", msg=percent_num)
         os.chdir('../')
 
     def pause(self):
-        self.__flag.clear()     # 设置为False, 让线程阻塞
+        self.__flag.clear()  # 设置为False, 让线程阻塞
 
     def resume(self):
-        self.__flag.set()    # 设置为True, 让线程停止阻塞
+        self.__flag.set()  # 设置为True, 让线程停止阻塞
 
     def stop(self):
-        self.__flag.set()       # 将线程从暂停状态恢复, 如何已经暂停的话
-        self.__running.clear()        # 设置为False
+        self.__flag.set()  # 将线程从暂停状态恢复, 如何已经暂停的话
+        self.__running.clear()  # 设置为False
+
 
 # 应用类
 class App(wx.App):
