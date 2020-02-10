@@ -90,7 +90,7 @@ class MainWindow(wx.Frame):
     def control_window(self):
         self.panel = wx.Panel(self, -1)
         self.panel.Bind(wx.EVT_MOTION, self.mouse_move_event)
-        self.menu_select = wx.Choice(self.panel, -1, pos=(20, 15), size=(200, 160), choices=index_list, style=0,
+        self.menu_select = wx.Choice(self.panel, -1, pos=(20, 15), size=(200, 30), choices=index_list, style=0,
                                      validator=wx.DefaultValidator, name="choice")
         self.check_list = []
         self.listBox = wx.ListBox(self.panel, -1, (20, 85), (200, 365), self.check_list, wx.LB_MULTIPLE,

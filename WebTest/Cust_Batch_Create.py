@@ -22,7 +22,7 @@ class Logger(object):
 
 
 # 发送认证
-def nature_info_get(num, before_num, cust_name='测试客户', org_code='HLJ15010', release_date='0114'):
+def nature_info_get(num, before_num, cust_name='测试客户', org_code='HLJ15010', release_date='0220'):
     url_add = 'http://10.124.146.175/cust-web/cust/CustInfoController/createCustInfo.do'
     s = requests.session()
     for create_num in range(before_num + 1, num + before_num + 1):
@@ -31,8 +31,8 @@ def nature_info_get(num, before_num, cust_name='测试客户', org_code='HLJ1501
                 'Accept': 'application/json, text/javascript, */*; q=0.01',
                 'Content-Type': 'application/json',
                 'Accept-Encoding': '',
-                'Cookie': 'PORTALSESSION=9fbabb59-382d-434a-a706-371c25094467; '
-                          'SERVERID=34763c1f1acb34871d8360c4c56f649a|1578021230|1578021223'
+                'Cookie': 'PORTALSESSION=0acf12ea-6101-49ba-ad2f-e8ee8d1824c7; '
+                          'SERVERID=34763c1f1acb34871d8360c4c56f649a|1581320261|1581318346'
             }
             request_data = json.dumps(
                 {
