@@ -6,7 +6,7 @@ import threading
 import time
 import wx.lib.newevent
 import wx
-from wx.lib.pubsub import pub
+from pubsub import pub
 
 
 class WorkerThread(threading.Thread):
