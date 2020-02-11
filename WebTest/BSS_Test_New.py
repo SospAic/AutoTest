@@ -178,26 +178,9 @@ def customer_manager():
             """基本信息"""
             driver.find_element_by_xpath('//*[@id="custInfoForm"]/div[2]/div[1]/div/div/div/div[2]/input').click()
             time.sleep(1)
-            driver.execute_script('document.getElementsByClassName("ztree")[0].scrollBottom=99999')
-            # 北京市大兴区
-            # driver.find_element_by_id('ui-id-33_1_switch').click()
-            # driver.find_element_by_id('ui-id-33_201_span').click()
-            # 安徽省合肥市
-            driver.find_element_by_id('ui-id-12_1_switch').click()
-            driver.find_element_by_id('ui-id-12_504_switch').click()
-            driver.find_element_by_id('ui-id-12_505_span').click()
-            # 成都锦江区
-            # driver.find_element_by_id('ui-id-33_154_switch').click()
-            # driver.find_element_by_id('ui-id-33_155_switch').click()
-            # driver.find_element_by_id('ui-id-33_439_span').click()
-            # 上海市中区
-            # driver.find_element_by_id('ui-id-33_152_switch').click()
-            # driver.find_element_by_id('ui-id-33_153_switch').click()
-            # driver.find_element_by_id('ui-id-33_422_span').click()
-            # 哈尔滨市区
-            # driver.find_element_by_id('ui-id-33_360_switch').click()
-            # driver.find_element_by_id('ui-id-33_361_switch').click()
-            # driver.find_element_by_id('ui-id-33_538_span').click()
+            driver.find_element_by_xpath('//a[contains(text(),"哈尔滨")]').click()
+            driver.find_element_by_xpath('//a[contains(text(),"哈尔滨市区")]').click()
+            driver.find_element_by_xpath('//button[contains(text(),"确定")]').click()
             time.sleep(1)
             if is_exist_element('/html/body/div[5]/div[2]/div'):
                 print(str(driver.find_element_by_xpath('/html/body/div[5]/div[2]/div').text) + '，已自动跳过')
@@ -214,9 +197,9 @@ def customer_manager():
             driver.find_element_by_link_text("金融业").click()
             driver.find_element_by_link_text("银行").click()
             driver.find_element_by_link_text("主管机构").click()
-            driver.find_element_by_xpath('/html/body/div[3]/div/div[4]/button[1]').click()
+            driver.find_element_by_xpath('/html/body/div[2]/div/div[4]/button[1]').click()
             '''经办人信息'''
-            driver.find_element_by_name('transactorName').send_keys('吴延华')
+            driver.find_element_by_name('transactorName').send_keys('吴余额')
             driver.find_element_by_xpath('//*[@id="transactorForm"]/div[1]/div[2]/div/div/div').click()
             # ActionChains(driver).send_keys(Keys.DOWN).perform()
             # time.sleep(1)
@@ -230,13 +213,14 @@ def customer_manager():
             # if is_exist_element('/html/body/div[4]/div[2]/div', '未通过'):
             #     print(driver.find_element_by_xpath('/html/body/div[4]/div[2]/div').text)
             #     break
-            driver.find_element_by_xpath('/html/body/div[5]/div[3]/button').click()
+            driver.find_element_by_xpath('/html/body/div[4]/div[3]/button').click()
             # driver.execute_script("document.getElementById('busiLicenseInfo_certFile_filefield').click()")
             """上传开户证件图像"""
             driver.find_element_by_xpath('//*[@id="creditCertiForm"]/div[4]/div[1]/div/div/div/span[1]/input').click()
+            time.sleep(3)
             upload_win_confirm()
             # os.system(r'.\\other\\autoupdate.exe')  # 调用外部Auto_it Script进行功能实现
-            time.sleep(5)
+            time.sleep(2)
             """客户经理信息"""
             # driver.find_element_by_xpath('//*[@id="baseinfo-panel"]/div[5]/div[1]/div/button').click()
             # driver.find_element_by_xpath('//*[@id="managerForm"]/div[2]/div[1]/div/div/input').click()
@@ -251,12 +235,14 @@ def customer_manager():
             """提交"""
             driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div/div[2]/div[4]/button[2]').click()
             time.sleep(5)
-            if is_exist_element('/html/body/div[7]/div[2]/div'):
+            if is_exist_element('/html/body/div[5]/div[2]/div'):
                 print('该客户已创建，自动跳过')
             else:
-                is_exist_element('/html/body/div[6]/div[2]/div', '成功')
-                success_code = str(driver.find_element_by_xpath('/html/body/div[6]/div[2]/div').text)
+                is_exist_element('/html/body/div[4]/div[2]/div', '成功')
+                success_code = str(driver.find_element_by_xpath('/html/body/div[4]/div[2]/div').text)
                 print(success_code)
+                driver.find_element_by_xpath('/html/body/div[4]/div[3]/button').click()
+                driver.refresh()
         except NoSuchElementException:
             print('识别元素失败,刷新页面')
             driver.refresh()
@@ -284,7 +270,7 @@ def main():
     get_auth_code.authCodeText = get_auth_code(driver, get_auth_code.imgElement)
     print('验证码为：' + get_auth_code.authCodeText)
     print('正在登录')
-    sys_login(driver, 'admin', 'jk00-Password', get_auth_code.authCodeText)
+    sys_login(driver, '150005', '00-Password', get_auth_code.authCodeText)
 
 
 class Logger(object):  # Log日志记录
