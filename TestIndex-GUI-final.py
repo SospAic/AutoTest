@@ -331,7 +331,7 @@ class MainWindow(wx.Frame):
 
     def OnStop(self, event):
         self.thread.stop()
-        self.listText.SetLabel("停止运行")
+        self.listText.SetLabel("正在停止运行，请耐心等待")
 
     # 键盘事件
     def KeyBoardDownVer(self, event):
