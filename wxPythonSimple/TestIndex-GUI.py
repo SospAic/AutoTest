@@ -65,8 +65,8 @@ class MainWindow(wx.Frame):
         self.select_dir = index_list[select_num]
         # print(self.select_dir)
         if select_num > -1:
-            os.chdir('./{}'.format(index_list[select_num]))
-            dirs = os.listdir('../')
+            os.chdir('.././{}'.format(index_list[select_num]))
+            dirs = os.listdir('./')
             file_list = []
             for i in dirs:  # 循环读取路径下的文件并筛选输出
                 if os.path.splitext(i)[1] == ".py":  # 筛选执行文件
@@ -75,7 +75,7 @@ class MainWindow(wx.Frame):
             # print(file_list)
             self.check_list = file_list
             self.listBox.Set(self.check_list)
-            os.chdir('../../')
+            # os.chdir('../')
             # print("选择{0}".format(self.menu_select.GetSelection()))
         else:
             print('索引值错误')
@@ -168,7 +168,7 @@ class MainWindow(wx.Frame):
 
     # 文件执行
     def run_path(self, run_dir='WebTest', *run_list):
-        os.chdir('./{}'.format(run_dir))
+        os.chdir('.././{}'.format(run_dir))
         try:
             for i in run_list[0]:
                 i = 'python {}.py'.format(i)
@@ -178,9 +178,9 @@ class MainWindow(wx.Frame):
                     print("{}执行结果:成功".format(i[7:-3]))
                 else:
                     print("{}执行结果:失败，详情请见日志".format(i[7:-3]))
-            os.chdir('../../')
+            os.chdir('../')
         except IndexError as e:
-            os.chdir('../../')
+            os.chdir('../')
             print(e)
 
     # 关于按钮事件

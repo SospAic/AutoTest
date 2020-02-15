@@ -35,7 +35,7 @@ class WorkerThread(Thread):
 
     def run(self):
         # 线程执行的代码
-        os.chdir('./{}'.format(self.run_dir))
+        os.chdir('.././{}'.format(self.run_dir))
         num = 1
         for i in self.run_list:
             i = 'python {}.py'.format(i)
@@ -49,7 +49,7 @@ class WorkerThread(Thread):
             # print(percent_num)
             num = num + 1
             wx.CallAfter(pub.sendMessage, "update", msg=percent_num)
-        os.chdir('../../')
+        os.chdir('../')
         if self._want_abort:
             wx.PostEvent(self._notify_window, ResultEvent(None))
             return
@@ -127,8 +127,8 @@ class MainWindow(wx.Frame):
         self.select_dir = index_list[select_num]
         # print(self.select_dir)
         if select_num > -1:
-            os.chdir('./{}'.format(index_list[select_num]))
-            dirs = os.listdir('../')
+            os.chdir('.././{}'.format(index_list[select_num]))
+            dirs = os.listdir('./')
             file_list = []
             for i in dirs:  # 循环读取路径下的文件并筛选输出
                 if os.path.splitext(i)[1] == ".py":  # 筛选执行文件
@@ -137,7 +137,7 @@ class MainWindow(wx.Frame):
             # print(file_list)
             self.check_list = file_list
             self.listBox.Set(self.check_list)
-            os.chdir('../../')
+            # os.chdir('../')
             # print("选择{0}".format(self.menu_select.GetSelection()))
         else:
             print('索引值错误')
@@ -230,7 +230,7 @@ class MainWindow(wx.Frame):
 
     # 关于按钮事件
     def _menu_about(self, event):
-        about = wx.MessageDialog(None, "v0.1  Copyright by adonet", "关于",
+        about = wx.MessageDialog(None, "v0.3  Copyright by adonet", "关于",
                                  wx.OK | wx.ICON_INFORMATION)
         about.ShowModal()
 
