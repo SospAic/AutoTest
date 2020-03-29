@@ -1,3 +1,4 @@
+PyPubSub
 wxPython
 eventlet
 opencv-python
