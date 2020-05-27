@@ -454,6 +454,4 @@ if __name__ == '__main__':
     excel = Excel()
     run_results = []
     # login_check('http://10.124.156.55/portal-web/index.jsp')  # 测试环境校验
-    # login_check('http://10.124.166.82/portal-web/index.jsp') # 准生产环境校验
-    # login_check('http://10.124.166.77/portal-web/index.jsp') # 生产环境校验
     testcase_list()

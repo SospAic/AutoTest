@@ -7,8 +7,8 @@ from WebTest.Selenium_driver_base import selenium_driver
 
 
 def main():
-    driver.find_element_by_id('loginUserCode').send_keys('admin')
-    driver.find_element_by_id('loginPassword').send_keys('^_^')
+    driver.find_element_by_id('loginUserCode').send_keys('涉密未填写')
+    driver.find_element_by_id('loginPassword').send_keys('涉密未填写')
     driver.find_element_by_name('verifyCode').click()
     print('请输入验证码')
     time.sleep(10)
