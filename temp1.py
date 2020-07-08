@@ -63,6 +63,7 @@ class App(wx.App):
 class MainWindow(wx.Frame):
     def __init__(self, *args, size=(800, 600), **kwargs):
         super().__init__(*args, size=size, **kwargs)
+        self.run_path = os.getcwd()  # 初始化执行路径
         self.SetMaxSize((800, 600))
         self.SetMinSize((800, 600))
         self.create_widgets()
@@ -78,6 +79,7 @@ class MainWindow(wx.Frame):
         pub.subscribe(self.updateDisplay, "update")
         icon = wx.Icon(name='Tools_icon.ico', type=wx.BITMAP_TYPE_ICO)
         self.SetIcon(icon)
+        print(self.run_path)
 
     # 绘制窗口
     def create_widgets(self):
@@ -113,6 +115,55 @@ class MainWindow(wx.Frame):
     # 暂时无用
     def _get_dir(self, event):
         self.listBox = event.GetEventObject()
+        selectdir = self.listBox.GetSelections()
+        print(selectdir)
+        print(self.check_list[selectdir[0]][2:-1])
+        # while True:
+        if selectdir[0] > -1 and os.path.isdir(self.check_list[selectdir[0]][2:-1]):
+            os.chdir('./{}'.format(self.check_list[selectdir[0]][2:-1]))
+            dirs = os.listdir('./')
+            file_list = []
+            file_list.append('> 返回上一级.')
+            for i in dirs:  # 循环读取路径下的文件并筛选输出
+                if os.path.isdir(i):
+                    file_list.append('.[{}]'.format(i))
+                elif os.path.splitext(i)[1] == ".py":  # 筛选执行文件
+                    file_list.append(i[:-3])
+                    # print(i)
+            file_list.sort()
+            # print(file_list)
+            current_path = os.getcwd()
+            print(current_path)
+            if current_path == self.run_path:
+                self.listBox.Set(index_list)
+            else:
+                self.check_list = file_list
+                self.listBox.Set(file_list)
+        elif selectdir[0] > -1 and self.check_list[selectdir[0]][2:-1] == '返回上一级':
+            os.chdir('../')
+            dirs = os.listdir('./')
+            file_list = []
+            file_list.append('> 返回上一级.')
+            for i in dirs:  # 循环读取路径下的文件并筛选输出
+                if os.path.isdir(i):
+                    file_list.append('.[{}]'.format(i))
+                elif os.path.splitext(i)[1] == ".py":  # 筛选执行文件
+                    file_list.append(i[:-3])
+                    # print(i)
+            file_list.sort()
+            # print(file_list)
+            current_path = os.getcwd()
+            print(current_path)
+            if current_path == self.run_path:
+                self.listBox.Set(index_list)
+            else:
+                self.check_list = file_list
+                self.listBox.Set(file_list)
+            self.check_list = file_list
+            self.listBox.Set(file_list)
+        else:
+            print('索引值错误')
+        pass
         # print("选择{0}".format(self.listBox.GetSelections()))
 
     # 获取文件夹下文件列表
@@ -120,39 +171,22 @@ class MainWindow(wx.Frame):
         self.menu_select = event.GetEventObject()
         select_num = self.menu_select.GetSelection()
         self.select_dir = index_list[select_num]
-        select_dir = self.listBox.GetSelections()
         # print(self.select_dir)
         if select_num > -1:
-            Apptest_list = []
-            if self.select_dir == 'AppTest':
-                os.chdir('./AppTest')
-                Apptest_list.append('返回上一级..')
-                for dir in os.listdir('./'):
-                    Apptest_list.append(dir)
-                self.listBox.Set(Apptest_list)
-                if os.path.isdir(select_dir[0]):
-                    os.chdir('./{}'.format(Apptest_list[select_dir[0]]))
-                    Apptest_list.append('返回上一级..')
-                    for dir in os.listdir('./'):
-                        Apptest_list.append(dir)
-                    self.listBox.Set(Apptest_list)
-                else:
-                    os.chdir('../')
-                    self.listBox.Set(index_list)
-
-            else:
-                os.chdir('./{}'.format(index_list[select_num]))
-                dirs = os.listdir('./')
-                file_list = []
-                for i in dirs:  # 循环读取路径下的文件并筛选输出
-                    if os.path.splitext(i)[1] == ".py":  # 筛选执行文件
-                        file_list.append(i[:-3])
-                        # print(i)
-                # print(file_list)
-                self.check_list = file_list
-                self.listBox.Set(self.check_list)
-                os.chdir('../')
-            # print("选择{0}".format(self.menu_select.GetSelection()))
+            os.chdir('./{}'.format(index_list[select_num]))
+            dirs = os.listdir('./')
+            file_list = []
+            for i in dirs:  # 循环读取路径下的文件并筛选输出
+                if os.path.isdir(i):
+                    file_list.append('.[{}]'.format(i))
+                elif os.path.splitext(i)[1] == ".py":  # 筛选执行文件
+                    file_list.append(i[:-3])
+                    # print(i)
+            file_list.sort()
+            # print(file_list)
+            self.check_list = file_list
+            self.listBox.Set(self.check_list)
+            # os.chdir('../')
         else:
             print('索引值错误')
             pass
