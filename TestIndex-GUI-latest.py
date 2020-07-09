@@ -23,12 +23,12 @@ class WorkerThread(threading.Thread):
 
     def run(self):
         # 线程执行的代码
-        os.chdir('./{}'.format(self.run_dir))
+        os.chdir(self.run_dir)
         num = 1
         for i in self.run_list:
             self.__flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
             i = 'python {}.py'.format(i)
-            print("运行{}/{}".format(self.run_dir, i[7:-3]))
+            print("运行{}/{}".format(self.run_dir, i[7:-3]))  # 路径可隐藏
             p = os.system(i)
             if p == 0:
                 print("{}执行结果:成功".format(i[7:-3]))
@@ -63,7 +63,7 @@ class App(wx.App):
 class MainWindow(wx.Frame):
     def __init__(self, *args, size=(800, 600), **kwargs):
         super().__init__(*args, size=size, **kwargs)
-        self.run_path = os.getcwd()  # 初始化执行路径
+        self.run_path = os.path.dirname(__file__)  # 初始化执行路径
         self.SetMaxSize((800, 600))
         self.SetMinSize((800, 600))
         self.create_widgets()
@@ -79,7 +79,6 @@ class MainWindow(wx.Frame):
         pub.subscribe(self.updateDisplay, "update")
         icon = wx.Icon(name='Tools_icon.ico', type=wx.BITMAP_TYPE_ICO)
         self.SetIcon(icon)
-        print(self.run_path)
 
     # 绘制窗口
     def create_widgets(self):
@@ -97,7 +96,7 @@ class MainWindow(wx.Frame):
         self.check_list = []
         self.listBox = wx.ListBox(self.panel, -1, (20, 85), (200, 365), self.check_list, wx.LB_MULTIPLE,
                                   validator=wx.DefaultValidator, )
-        self.listText = wx.StaticText(self.panel, -1, '示例文本', (240, 20), (200, 15), style=0, name="staticText")
+        self.listText = wx.StaticText(self.panel, -1, '操作提示框', (240, 20), (200, 15), style=0, name="staticText")
         indexFont = wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL, underline=False, faceName="",
                             encoding=wx.FONTENCODING_DEFAULT)
         self.submit_button = wx.Button(self.panel, -1, u"确定", (20, 460), size=wx.DefaultSize, style=0)
@@ -116,54 +115,65 @@ class MainWindow(wx.Frame):
     def _get_dir(self, event):
         self.listBox = event.GetEventObject()
         selectdir = self.listBox.GetSelections()
-        print(selectdir)
-        print(self.check_list[selectdir[0]][2:-1])
-        # while True:
-        if selectdir[0] > -1 and os.path.isdir(self.check_list[selectdir[0]][2:-1]):
-            os.chdir('./{}'.format(self.check_list[selectdir[0]][2:-1]))
-            dirs = os.listdir('./')
-            file_list = []
-            file_list.append('> 返回上一级.')
-            for i in dirs:  # 循环读取路径下的文件并筛选输出
-                if os.path.isdir(i):
-                    file_list.append('.[{}]'.format(i))
-                elif os.path.splitext(i)[1] == ".py":  # 筛选执行文件
-                    file_list.append(i[:-3])
-                    # print(i)
-            file_list.sort()
-            # print(file_list)
-            current_path = os.getcwd()
-            print(current_path)
-            if current_path == self.run_path:
-                self.listBox.Set(index_list)
+        self.current_path = os.getcwd()
+        try:
+            if selectdir[0] > -1 and os.path.isdir(self.check_list[selectdir[0]][2:-1]):
+                self.searchinput.SetLabelText('')
+                os.chdir('./{}'.format(self.check_list[selectdir[0]][2:-1]))
+                dirs = os.listdir('./')
+                file_list = []
+                file_list.append('> 返回上一级.')
+                for i in dirs:  # 循环读取路径下的文件并筛选输出
+                    if os.path.isdir(i):
+                        file_list.append('.[{}]'.format(i))
+                    elif os.path.splitext(i)[1] == ".py":  # 筛选执行文件
+                        file_list.append(i[:-3])
+                        # print(i)
+                file_list.sort()
+                top_dir = []
+                self.current_path = os.getcwd()
+                if str(self.current_path[-8:]) == 'AutoTest':
+                    top_dir.append('(已至最上级目录，请重新选择)')
+                    self.listBox.Set(top_dir)
+                else:
+                    self.check_list = file_list
+                    self.listBox.Set(file_list)
+            elif selectdir[0] > -1 and self.check_list[selectdir[0]][2:-1] == '返回上一级':
+                os.chdir('../')
+                dirs = os.listdir('./')
+                file_list = []
+                self.current_path = os.getcwd()
+                check_value = str(self.current_path).split('\\')
+                # print(check_value)
+                file_list.append('> 返回上一级.')
+                try:
+                    for i in index_list:
+                        if check_value[-1] == i:
+                            file_list.remove('> 返回上一级.')
+                        else:
+                            continue
+                except TypeError:
+                    pass
+                for i in dirs:  # 循环读取路径下的文件并筛选输出
+                    if os.path.isdir(i):
+                        file_list.append('.[{}]'.format(i))
+                    elif os.path.splitext(i)[1] == ".py":  # 筛选执行文件
+                        file_list.append(i[:-3])
+                        # print(i)
+                file_list.sort()
+                # print(file_list)
+                top_dir = []
+                if str(self.current_path[-8:]) == 'AutoTest':
+                    top_dir.append('(已至最上级目录，请重新选择)')
+                    self.listBox.Set(top_dir)
+                else:
+                    self.check_list = file_list
+                    self.listBox.Set(file_list)
             else:
-                self.check_list = file_list
-                self.listBox.Set(file_list)
-        elif selectdir[0] > -1 and self.check_list[selectdir[0]][2:-1] == '返回上一级':
-            os.chdir('../')
-            dirs = os.listdir('./')
-            file_list = []
-            file_list.append('> 返回上一级.')
-            for i in dirs:  # 循环读取路径下的文件并筛选输出
-                if os.path.isdir(i):
-                    file_list.append('.[{}]'.format(i))
-                elif os.path.splitext(i)[1] == ".py":  # 筛选执行文件
-                    file_list.append(i[:-3])
-                    # print(i)
-            file_list.sort()
-            # print(file_list)
-            current_path = os.getcwd()
-            print(current_path)
-            if current_path == self.run_path:
-                self.listBox.Set(index_list)
-            else:
-                self.check_list = file_list
-                self.listBox.Set(file_list)
-            self.check_list = file_list
-            self.listBox.Set(file_list)
-        else:
-            print('索引值错误')
-        pass
+                # print('索引值错误')
+                pass
+        except IndexError:
+            pass
         # print("选择{0}".format(self.listBox.GetSelections()))
 
     # 获取文件夹下文件列表
@@ -173,6 +183,7 @@ class MainWindow(wx.Frame):
         self.select_dir = index_list[select_num]
         # print(self.select_dir)
         if select_num > -1:
+            os.chdir(self.run_path)
             os.chdir('./{}'.format(index_list[select_num]))
             dirs = os.listdir('./')
             file_list = []
@@ -272,11 +283,11 @@ class MainWindow(wx.Frame):
                 try:
                     for file_num in self.listBox.GetSelections():
                         self.select_file.append(self.search_result[file_num])
-                    self.thread = WorkerThread(self.select_dir, self.select_file)
+                    self.thread = WorkerThread(self.current_path, self.select_file)
                 except AttributeError:
                     for file_num in self.listBox.GetSelections():
                         self.select_file.append(self.check_list[file_num])
-                    self.thread = WorkerThread(self.select_dir, self.select_file)
+                    self.thread = WorkerThread(self.current_path, self.select_file)
                 self.menu_select.Disable()
                 self.listBox.Disable()
                 self.submit_button.Disable()
@@ -292,7 +303,7 @@ class MainWindow(wx.Frame):
 
     # 关于按钮事件
     def _menu_about(self, event):
-        about = wx.MessageDialog(None, "v0.6  Copyright by adonet", "关于",
+        about = wx.MessageDialog(None, "v0.81  Copyright by adonet", "关于",
                                  wx.OK | wx.ICON_INFORMATION)
         about.ShowModal()
 

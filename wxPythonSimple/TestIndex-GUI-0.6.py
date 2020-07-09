@@ -38,7 +38,7 @@ class WorkerThread(threading.Thread):
             # print(percent_num)
             num = num + 1
             wx.CallAfter(pub.sendMessage, "update", msg=percent_num)
-        os.chdir('../')
+        os.chdir('../../')
 
     def pause(self):
         self.__flag.clear()  # 设置为False, 让线程阻塞
@@ -123,7 +123,7 @@ class MainWindow(wx.Frame):
         # print(self.select_dir)
         if select_num > -1:
             os.chdir('./{}'.format(index_list[select_num]))
-            dirs = os.listdir('./')
+            dirs = os.listdir('../')
             file_list = []
             for i in dirs:  # 循环读取路径下的文件并筛选输出
                 if os.path.splitext(i)[1] == ".py":  # 筛选执行文件
@@ -132,7 +132,7 @@ class MainWindow(wx.Frame):
             # print(file_list)
             self.check_list = file_list
             self.listBox.Set(self.check_list)
-            os.chdir('../')
+            os.chdir('../../')
             # print("选择{0}".format(self.menu_select.GetSelection()))
         else:
             print('索引值错误')
