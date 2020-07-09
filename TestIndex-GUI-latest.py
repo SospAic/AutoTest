@@ -64,6 +64,7 @@ class MainWindow(wx.Frame):
     def __init__(self, *args, size=(800, 600), **kwargs):
         super().__init__(*args, size=size, **kwargs)
         self.run_path = os.path.dirname(__file__)  # 初始化执行路径
+        self.select_path = str
         self.SetMaxSize((800, 600))
         self.SetMinSize((800, 600))
         self.create_widgets()
@@ -111,7 +112,7 @@ class MainWindow(wx.Frame):
         self.pause_button.Disable()
         self.cancel_button.Disable()
 
-    # 暂时无用
+    # 文件夹相关操作逻辑
     def _get_dir(self, event):
         self.listBox = event.GetEventObject()
         selectdir = self.listBox.GetSelections()
@@ -137,7 +138,7 @@ class MainWindow(wx.Frame):
                     self.listBox.Set(top_dir)
                 else:
                     self.check_list = file_list
-                    self.listBox.Set(file_list)
+                    self.listBox.Set(self.check_list)
             elif selectdir[0] > -1 and self.check_list[selectdir[0]][2:-1] == '返回上一级':
                 os.chdir('../')
                 dirs = os.listdir('./')
@@ -168,13 +169,13 @@ class MainWindow(wx.Frame):
                     self.listBox.Set(top_dir)
                 else:
                     self.check_list = file_list
-                    self.listBox.Set(file_list)
+                    self.listBox.Set(self.check_list)
             else:
                 # print('索引值错误')
                 pass
         except IndexError:
             pass
-        # print("选择{0}".format(self.listBox.GetSelections()))
+        print("选择{0}".format(self.listBox.GetSelections()))
 
     # 获取文件夹下文件列表
     def _get_dir_elements(self, event):
@@ -280,14 +281,17 @@ class MainWindow(wx.Frame):
             ret = dial.ShowModal()
             if ret == wx.ID_YES:
                 self.select_file = []
+                self.select_path = os.getcwd()
                 try:
                     for file_num in self.listBox.GetSelections():
+                        print(self.select_path)
+                        print(len(self.select_file))
                         self.select_file.append(self.search_result[file_num])
-                    self.thread = WorkerThread(self.current_path, self.select_file)
+                    self.thread = WorkerThread(self.select_path, self.select_file)
                 except AttributeError:
                     for file_num in self.listBox.GetSelections():
                         self.select_file.append(self.check_list[file_num])
-                    self.thread = WorkerThread(self.current_path, self.select_file)
+                    self.thread = WorkerThread(self.select_path, self.select_file)
                 self.menu_select.Disable()
                 self.listBox.Disable()
                 self.submit_button.Disable()
