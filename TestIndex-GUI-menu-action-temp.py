@@ -10,10 +10,11 @@ from pubsub import pub
 
 
 class WorkerThread(threading.Thread):
-    def __init__(self, run_files, *args, **kwargs):
+    def __init__(self, run_dir, run_list, *args, **kwargs):
         # 线程实例化时立即启动
         super(WorkerThread, self).__init__(*args, **kwargs)
-        self.run_files = run_files
+        self.run_dir = run_dir
+        self.run_list = run_list
         self.__flag = threading.Event()  # 用于暂停线程的标识
         self.__flag.set()  # 设置为True
         self.__running = threading.Event()  # 用于停止线程的标识
@@ -22,22 +23,22 @@ class WorkerThread(threading.Thread):
 
     def run(self):
         # 线程执行的代码
+        os.chdir(self.run_dir)
         num = 1
-        for path, file in self.run_files:
+        for i in self.run_list:
             self.__flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
-            os.chdir(path)
-            i = 'python {}'.format(file)
-            print("运行{}{}".format(path, file))  # 路径可隐藏
+            i = 'python {}.py'.format(i)
+            print("运行{}/{}".format(self.run_dir, i[7:-3]))  # 路径可隐藏
             p = os.system(i)
             if p == 0:
                 print("{}执行结果:成功".format(i[7:-3]))
             else:
                 print("{}执行结果:失败，详情请见日志".format(i[7:-3]))
-            percent_num = int((num / len(self.run_files)) * 100)
+            percent_num = int((num / len(self.run_list)) * 100)
             # print(percent_num)
             num = num + 1
             wx.CallAfter(pub.sendMessage, "update", msg=percent_num)
-        os.chdir(local_path)
+        os.chdir('../')
 
     def pause(self):
         self.__flag.clear()  # 设置为False, 让线程阻塞
@@ -62,6 +63,7 @@ class App(wx.App):
 class MainWindow(wx.Frame):
     def __init__(self, *args, size=(800, 600), **kwargs):
         super().__init__(*args, size=size, **kwargs)
+        self.run_path = os.path.dirname(__file__)  # 初始化执行路径
         self.SetMaxSize((800, 600))
         self.SetMinSize((800, 600))
         self.create_widgets()
@@ -112,6 +114,66 @@ class MainWindow(wx.Frame):
     # 文件夹相关操作逻辑
     def _get_dir(self, event):
         self.listBox = event.GetEventObject()
+        select_dir = self.listBox.GetSelections()
+        self.current_path = os.getcwd()
+        try:
+            if select_dir[0] > -1 and os.path.isdir(self.check_list[select_dir[0]][2:-1]):
+                self.searchinput.SetLabelText('')
+                os.chdir('./{}'.format(self.check_list[select_dir[0]][2:-1]))
+                dirs = os.listdir('./')
+                file_list = []
+                file_list.append('> 返回上一级.')
+                for i in dirs:  # 循环读取路径下的文件并筛选输出
+                    if os.path.isdir(i):
+                        file_list.append('.[{}]'.format(i))
+                    elif os.path.splitext(i)[1] == ".py":  # 筛选执行文件
+                        file_list.append(i[:-3])
+                        # print(i)
+                file_list.sort()
+                top_dir = []
+                self.current_path = os.getcwd()
+                if str(self.current_path[-8:]) == 'AutoTest':
+                    top_dir.append('(已至最上级目录，请重新选择)')
+                    self.listBox.Set(top_dir)
+                else:
+                    self.check_list = file_list
+                    self.listBox.Set(self.check_list)
+            elif select_dir[0] > -1 and self.check_list[select_dir[0]][2:-1] == '返回上一级':
+                os.chdir('../')
+                dirs = os.listdir('./')
+                file_list = []
+                self.current_path = os.getcwd()
+                check_value = str(self.current_path).split('\\')
+                # print(check_value)
+                file_list.append('> 返回上一级.')
+                try:
+                    for i in index_list:
+                        if check_value[-1] == i:
+                            file_list.remove('> 返回上一级.')
+                        else:
+                            continue
+                except TypeError:
+                    pass
+                for i in dirs:  # 循环读取路径下的文件并筛选输出
+                    if os.path.isdir(i):
+                        file_list.append('.[{}]'.format(i))
+                    elif os.path.splitext(i)[1] == ".py":  # 筛选执行文件
+                        file_list.append(i[:-3])
+                        # print(i)
+                file_list.sort()
+                # print(file_list)
+                top_dir = []
+                if str(self.current_path[-8:]) == 'AutoTest':
+                    top_dir.append('(已至最上级目录，请重新选择)')
+                    self.listBox.Set(top_dir)
+                else:
+                    self.check_list = file_list
+                    self.listBox.Set(self.check_list)
+            else:
+                # print('索引值错误')
+                pass
+        except IndexError:
+            pass
         print("选择{0}".format(self.listBox.GetSelections()))
 
     # 获取文件夹下文件列表
@@ -121,25 +183,21 @@ class MainWindow(wx.Frame):
         self.select_dir = index_list[select_num]
         # print(self.select_dir)
         if select_num > -1:
-            # self.searchinput.SetLabel('')
+            os.chdir(self.run_path)
             os.chdir('./{}'.format(index_list[select_num]))
-            self.dir_files = {}
-            show_files = []
-            for root, dirs, files in os.walk(".", topdown=True):
-                a = 0
-                for name in files:
-                    if os.path.splitext(name)[1] == ".py":  # 筛选执行文件
-                        file_info = ['{0}\\{1}'.format(index_list[select_num], root[2:]), name]
-                        self.dir_files[a] = file_info
-                        show_files.append(os.path.join(root[2:], name[:-3]))
-                        a += 1
-                    else:
-                        continue
-            print(self.dir_files)
-            self.check_list = show_files
+            dirs = os.listdir('./')
+            file_list = []
+            for i in dirs:  # 循环读取路径下的文件并筛选输出
+                if os.path.isdir(i):
+                    file_list.append('.[{}]'.format(i))
+                elif os.path.splitext(i)[1] == ".py":  # 筛选执行文件
+                    file_list.append(i[:-3])
+                    # print(i)
+            file_list.sort()
+            # print(file_list)
+            self.check_list = file_list
             self.listBox.Set(self.check_list)
-            os.chdir('../')
-            # print("选择{0}".format(self.menu_select.GetSelection()))
+            # os.chdir('../')
         else:
             print('索引值错误')
             pass
@@ -224,14 +282,13 @@ class MainWindow(wx.Frame):
                 self.select_file = []
                 try:
                     for file_num in self.listBox.GetSelections():
+                        print(len(self.select_file))
                         self.select_file.append(self.search_result[file_num])
-                        print(self.select_file)
-                    self.thread = WorkerThread(self.select_file)
-                except:
+                    self.thread = WorkerThread(self.current_path, self.select_file)
+                except AttributeError:
                     for file_num in self.listBox.GetSelections():
-                        self.select_file.append(self.dir_files[file_num])
-                        print(self.select_file)
-                    self.thread = WorkerThread(self.select_file)
+                        self.select_file.append(self.check_list[file_num])
+                    self.thread = WorkerThread(self.current_path, self.select_file)
                 self.menu_select.Disable()
                 self.listBox.Disable()
                 self.submit_button.Disable()
@@ -247,7 +304,7 @@ class MainWindow(wx.Frame):
 
     # 关于按钮事件
     def _menu_about(self, event):
-        about = wx.MessageDialog(None, "v0.86  Copyright by adonet", "关于",
+        about = wx.MessageDialog(None, "v0.81  Copyright by adonet", "关于",
                                  wx.OK | wx.ICON_INFORMATION)
         about.ShowModal()
 
@@ -374,6 +431,5 @@ def main():
 
 
 if __name__ == '__main__':
-    local_path = os.path.dirname(__file__)  # 初始化执行路径
     index_list = ['AppTest', 'MultiThreading', 'WebTest']
     main()
