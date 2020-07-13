@@ -27,7 +27,7 @@ class WorkerThread(threading.Thread):
             self.__flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
             os.chdir(path)
             i = 'python {}'.format(file)
-            print("运行{}{}".format(path, file))  # 路径可隐藏
+            print("运行{}\{}".format(path, file))  # 路径可隐藏
             p = os.system(i)
             if p == 0:
                 print("{}执行结果:成功".format(i[7:-3]))
@@ -37,6 +37,7 @@ class WorkerThread(threading.Thread):
             # print(percent_num)
             num = num + 1
             wx.CallAfter(pub.sendMessage, "update", msg=percent_num)
+            os.chdir(local_path)
         os.chdir(local_path)
 
     def pause(self):
@@ -92,7 +93,7 @@ class MainWindow(wx.Frame):
         self.menu_select = wx.Choice(self.panel, -1, pos=(20, 15), size=(200, 30), choices=index_list, style=0,
                                      validator=wx.DefaultValidator, name="choice")
         self.check_list = []
-        self.listBox = wx.ListBox(self.panel, -1, (20, 85), (200, 365), self.check_list, wx.LB_MULTIPLE,
+        self.listBox = wx.ListBox(self.panel, -1, (20, 85), (200, 365), self.check_list, wx.LB_EXTENDED | wx.LB_HSCROLL,
                                   validator=wx.DefaultValidator, )
         self.listText = wx.StaticText(self.panel, -1, '操作提示框', (240, 20), (200, 15), style=0, name="staticText")
         indexFont = wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL, underline=False, faceName="",
@@ -123,19 +124,16 @@ class MainWindow(wx.Frame):
         if select_num > -1:
             self.searchinput.SetLabel('')
             os.chdir('./{}'.format(index_list[select_num]))
-            self.dir_files = {}
+            self.dir_files = []
             show_files = []
             for root, dirs, files in os.walk(".", topdown=True):
-                a = 0
                 for name in files:
                     if os.path.splitext(name)[1] == ".py":  # 筛选执行文件
                         file_info = ['{0}\\{1}'.format(index_list[select_num], root[2:]), name]
-                        self.dir_files[a] = file_info
+                        self.dir_files.append(file_info)
                         show_files.append(os.path.join(root[2:], name[:-3]))
-                        a += 1
                     else:
                         continue
-            print(self.dir_files)
             self.check_list = show_files
             self.listBox.Set(self.check_list)
             os.chdir('../')
@@ -224,13 +222,13 @@ class MainWindow(wx.Frame):
                 self.select_file = []
                 try:
                     for file_num in self.listBox.GetSelections():
-                        self.select_file.append(self.search_result[file_num])
-                        print(self.select_file)
+                        self.search_result[file_num] = '{}\{}.py'.format(self.select_dir, self.search_result[file_num])
+                        check_code = os.path.split(self.search_result[file_num])
+                        self.select_file.append(check_code)
                     self.thread = WorkerThread(self.select_file)
                 except:
                     for file_num in self.listBox.GetSelections():
                         self.select_file.append(self.dir_files[file_num])
-                        print(self.select_file)
                     self.thread = WorkerThread(self.select_file)
                 self.menu_select.Disable()
                 self.listBox.Disable()
@@ -247,7 +245,7 @@ class MainWindow(wx.Frame):
 
     # 关于按钮事件
     def _menu_about(self, event):
-        about = wx.MessageDialog(None, "v0.86  Copyright by adonet", "关于",
+        about = wx.MessageDialog(None, "v0.88  Copyright by adonet", "关于",
                                  wx.OK | wx.ICON_INFORMATION)
         about.ShowModal()
 
@@ -255,6 +253,7 @@ class MainWindow(wx.Frame):
     def search_input(self, event):
         self.search_text = self.searchinput.GetValue()
         self.search_result = []
+        print(self.check_list)
         for i in self.check_list:
             if str(self.search_text).lower() in i.lower():
                 self.search_result.append(str(i))
