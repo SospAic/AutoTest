@@ -121,7 +121,7 @@ class MainWindow(wx.Frame):
         self.select_dir = index_list[select_num]
         # print(self.select_dir)
         if select_num > -1:
-            # self.searchinput.SetLabel('')
+            self.searchinput.SetLabel('')
             os.chdir('./{}'.format(index_list[select_num]))
             self.dir_files = {}
             show_files = []
