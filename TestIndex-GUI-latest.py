@@ -134,6 +134,7 @@ class MainWindow(wx.Frame):
                         show_files.append(os.path.join(root[2:], name[:-3]))
                     else:
                         continue
+            show_files.sort()
             self.check_list = show_files
             self.listBox.Set(self.check_list)
             os.chdir('../')
@@ -258,6 +259,7 @@ class MainWindow(wx.Frame):
                 self.search_result.append(str(i))
             else:
                 pass
+        self.search_result.sort()
         self.listBox.Set(self.search_result)
         # print(self.search_result)
 
