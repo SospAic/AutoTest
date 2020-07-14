@@ -113,7 +113,7 @@ class MainWindow(wx.Frame):
     # 文件夹相关操作逻辑
     def _get_dir(self, event):
         self.listBox = event.GetEventObject()
-        print("选择{0}".format(self.listBox.GetSelections()))
+        # print("选择{0}".format(self.listBox.GetSelections()))
 
     # 获取文件夹下文件列表
     def _get_dir_elements(self, event):
@@ -253,7 +253,6 @@ class MainWindow(wx.Frame):
     def search_input(self, event):
         self.search_text = self.searchinput.GetValue()
         self.search_result = []
-        print(self.check_list)
         for i in self.check_list:
             if str(self.search_text).lower() in i.lower():
                 self.search_result.append(str(i))
