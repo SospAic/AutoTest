@@ -377,8 +377,8 @@ class GetInfo:
         self.driver.implicitly_wait(30)
         self.driver.get(url)
         self.driver.maximize_window()
-        self.login_name = "cu_hl"
-        self.password = "Rjzd4cS@Cu2fHlj"
+        self.login_name = "***"
+        self.password = "***"
         self.login_num = 1
         self.screenshot_file = './pic_code/auth_cap.png'
         self.verify_file = './pic_code/auth_cap.png'
