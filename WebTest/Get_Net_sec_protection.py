@@ -219,13 +219,12 @@ class Excel:
             write_data = content[total]
             total += 1
             print('共计{0:>3}条信息，当前为{1:>3}条：{2}'.format(len(content), total, write_data))
-            if col >= 9:
-                if re.match(r'\u7533\u8bf7\u4e2d', write_data):
-                    pass
-                else:
-                    row += 1
-                    col = 1
-            self.content_style_write(row + 1, col, write_data)
+            if re.match(r'^\d{1,3}$', write_data):
+                row += 1
+                col = 1
+            else:
+                pass
+            self.content_style_write(row, col, write_data)
             col += 1
         # 保存表格
         try:
@@ -518,7 +517,29 @@ class GetInfo:
                 detail_name = data_details[i].find_element(By.XPATH, "./td[3]").text
                 print('第{}条，正在获取<{}>详情'.format(i + 1, detail_name))
                 time.sleep(5)
-                detail_page = data_details[i].find_element(By.XPATH, "./td[5]/a[1]").click()
+                try:
+                    detail_page = data_details[i].find_element(By.XPATH, "./td[5]/a[1]").click()
+                except StaleElementReferenceException:
+                    until_run = True
+                    while until_run:
+                        time.sleep(1)
+                        print('元素不可见，1秒后重试')
+                        if self.is_exist_element(elem="./td[5]/a[1]"):
+                            data_details[i].find_element(By.XPATH, "./td[5]/a[1]").click()
+                            until_run = False
+                        elif self.is_exist_element(elem="//a[contains(text(),'返回')]"):
+                            self.driver.find_element(By.XPATH, '//*[@id="_page-buttons"]/a'). \
+                                find_element(By.XPATH, "//a[contains(text(),'返回')]").click()
+                            time.sleep(2)
+                            if self.is_exist_element(elem="./td[5]/a[1]"):
+                                data_details[i].find_element(By.XPATH, "./td[5]/a[1]").click()
+                                until_run = False
+                            else:
+                                time.sleep(1)
+                                continue
+                        else:
+                            time.sleep(1)
+                            continue
                 time.sleep(3)
                 # 主要硬件
                 main_device = self.driver.find_elements(By.XPATH,

@@ -63,7 +63,7 @@ class Excel:
         now = datetime.now()
         # create_num = str(random.randint(1, 1000))
         self.create_date = now.strftime('%Y-%m-%d_%H%M%S')  # 创建日期，可配合随机码使用
-        self.create_name = '{}定级信息{}.xlsx'.format(self.filepath, self.create_date)
+        self.create_name = '{}test{}.xlsx'.format(self.filepath, self.create_date)
         if os.path.exists(self.create_name):
             # 打开已有表
             self.new = openpyxl.load_workbook(self.create_name)
@@ -180,13 +180,12 @@ class Excel:
             write_data = content[total]
             total += 1
             print('共计{0:>3}条信息，当前为{1:>3}条：{2}'.format(len(content), total, write_data))
-            if col >= 9:
-                if re.match(r'\u7533\u8bf7\u4e2d', write_data):
-                    pass
-                else:
-                    row += 1
-                    col = 1
-            self.content_style_write(row + 1, col, write_data)
+            if re.match(r'^\d{1,3}$', write_data):
+                row += 1
+                col = 1
+            else:
+                pass
+            self.content_style_write(row, col, write_data)
             col += 1
         # 保存表格
         try:
