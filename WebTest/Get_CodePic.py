@@ -7,7 +7,7 @@ from WebTest.Selenium_driver_base import selenium_driver
 
 
 def get_pic(runtime=1):
-    image = 'http://10.124.156.55/portal-web/portal/LoginController/vcode.do?1553828805242'
+    image = 'https://www.mii-aqfh.cn/identifyCode?1624348009372'
     random_num = random.randint(1, 1000)
     driver = webdriver.Chrome(executable_path=selenium_driver())
     driver.implicitly_wait(10)

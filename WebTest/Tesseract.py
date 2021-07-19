@@ -37,7 +37,7 @@ def processImg(inputfile, outputfile):
     da = np.array(data, np.int32)
     da[da <= 170] = 0
     da[da > 170] = 255
-    da = da.reshape((80, 200))  # 图片原始尺寸为(60,180)
+    da = da.reshape((40, 120))  # 图片原始尺寸为(60,180)
     clearNoise(da)
     clearNoise(da)
     clearNoise(da)
