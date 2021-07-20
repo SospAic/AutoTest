@@ -241,7 +241,7 @@ class Excel:
         self.new._active_sheet_index = self.active_num
         print('创建{}详情'.format(content_title))
         # 写入表头
-        self.title_style_write(1, 1, content_title)
+        self.title_style_write(1, 1, content_title[:30])
         # 写入内容
         row = 2
         total = 1
@@ -306,9 +306,12 @@ class Excel:
             print('文件未关闭，保存失败，请关闭文件后重试')
             pass
 
-    def auto_set_row_col(self):
+    def auto_set_row_col(self, file=None):
         # 自动设置所有表格的列宽和行高
-        wb = openpyxl.load_workbook(self.create_name)
+        if file:
+            wb = openpyxl.load_workbook(file)
+        else:
+            wb = openpyxl.load_workbook(self.create_name)
         # print(wb.sheetnames)
         # 设置行高、列宽
         # 遍历所有Sheet页
@@ -326,12 +329,18 @@ class Excel:
                 column_data = []
                 # 遍历列中所有单元格长度
                 for ii in range(1, ws.max_row + 1):
-                    cell_value = wd.cell(row=ii, column=i).value
+                    try:
+                        cell_value = wd.cell(row=ii, column=i).value
+                    except AttributeError:
+                        break
                     a_length = len(str(cell_value).encode('utf-8'))
                     # print('a:{},i:{},ii:{},cell_value:{},a_length:{}'.format(a, i, ii, cell_value, a_length))
                     column_data.append(a_length)
                     # ws.row_dimensions[i].height = height
-                col_width = max(column_data)
+                try:
+                    col_width = max(column_data)
+                except ValueError:
+                    break
                 ws.column_dimensions[get_column_letter(i)].width = col_width
         wb.save(self.create_name)
 
@@ -386,6 +395,7 @@ class GetInfo:
         self.excel = Excel()
         self.per_page_num = '10'
         self.turn = True
+        self.current_page = 1
 
     def is_exist_element(self, elem, code='错误信息'):
         """判断元素是否存在"""
@@ -424,7 +434,10 @@ class GetInfo:
 
     def login(self):
         """OCR识别登录"""
-        while self.login_num <= 100:
+        if self.login_num == 100:
+            print('尝试次数已达100次，程序将推出')
+            return 0
+        else:
             time.sleep(0.5)
             self.get_auth_code()
             self.driver.find_element(By.ID, "LOGIN_NAME").send_keys(self.login_name)
@@ -442,26 +455,25 @@ class GetInfo:
             else:
                 # 登陆成功
                 self.get_start()
-                break
+                return 1
 
     def normal_login(self):
         """手动登录"""
-        while self.login_num <= 100:
+        time.sleep(0.5)
+        self.driver.find_element(By.ID, "LOGIN_NAME").send_keys(self.login_name)
+        self.driver.find_element(By.ID, "PWD").send_keys(self.password)
+        self.driver.find_element(By.ID, "email").click()
+        time.sleep(4)
+        self.driver.find_element(By.ID, "btnLogin").click()
+        if self.is_exist_element('//*[@id="btnLogin"]'):
             time.sleep(0.5)
-            self.driver.find_element(By.ID, "LOGIN_NAME").send_keys(self.login_name)
-            self.driver.find_element(By.ID, "PWD").send_keys(self.password)
-            self.driver.find_element(By.ID, "email").click()
-            time.sleep(4)
-            self.driver.find_element(By.ID, "btnLogin").click()
-            if self.is_exist_element('//*[@id="btnLogin"]'):
-                time.sleep(0.5)
-                self.driver.find_element(By.ID, "LOGIN_NAME").clear()
-                self.driver.find_element(By.ID, "PWD").clear()
-                self.normal_login()
-            else:
-                # 登陆成功
-                self.get_start()
-                break
+            self.driver.find_element(By.ID, "LOGIN_NAME").clear()
+            self.driver.find_element(By.ID, "PWD").clear()
+            self.normal_login()
+        else:
+            # 登陆成功
+            self.get_start()
+            return 1
 
     def title_base(self):
         title_list = []
@@ -805,9 +817,15 @@ class GetInfo:
                     return 0
                 else:
                     print('获取Index失败，继续下一条')
-                    self.driver.refresh()
-                    self.search_options()
-                    continue
+                    try:
+                        self.driver.find_element(By.XPATH, '//*[@id="_page-buttons"]/a'). \
+                            find_element(By.XPATH, "//a[contains(text(),'返回')]").click()
+                        continue
+                    except NoSuchElementException:
+                        self.driver.refresh()
+                        self.search_options()
+                        self.recovery_page_num()
+                        continue
             except NoSuchElementException:
                 print('获取元素失败，继续下一条')
                 try:
@@ -817,17 +835,19 @@ class GetInfo:
                 except NoSuchElementException:
                     self.driver.refresh()
                     self.search_options()
+                    self.recovery_page_num()
                     continue
             except TimeoutException:
                 print('请求超时，继续下一条')
                 self.driver.refresh()
                 self.search_options()
+                self.recovery_page_num()
                 continue
             except ElementClickInterceptedException:
                 print('元素不可点击，1秒后自动重试')
                 time.sleep(1)
                 try:
-                    data_details[i].find_element(By.XPATH, "./td[5]/a[1]").click()
+                    data_details[self.current_page].find_element(By.XPATH, "./td[5]/a[1]").click()
                 except ElementClickInterceptedException:
                     print('元素不可点击，1秒后自动重试')
                     time.sleep(1)
@@ -836,16 +856,18 @@ class GetInfo:
         self.driver.find_element(By.CSS_SELECTOR, ".\\_top_menu:nth-child(2) > p").click()
         # 检索条件
         self.search_options()
-        select_ele = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/div/div/div/div["
-                                                        "3]/div/div/div/div/div/div/div[2]/div/div/div/div["
-                                                        "1]/div/label/select")
-        s = Select(select_ele)
-        self.per_page_num = '100'
-        s.select_by_value(self.per_page_num)
+        # 每页显示数量
+        # select_ele = self.driver.find_element(By.XPATH, "/html/body/div[1]/div[2]/div/div/div/div[1]/div/div/div/div["
+        #                                                 "3]/div/div/div/div/div/div/div[2]/div/div/div/div["
+        #                                                 "1]/div/label/select")
+        # s = Select(select_ele)
+        # self.per_page_num = '100'
+        # s.select_by_value(self.per_page_num)
         time.sleep(2)
         data_details = self.driver.find_elements(By.XPATH, '//*[@id="_GRADINGOBJ_tblDatasTable"]/tbody/tr[@role]')
         run_num = len(data_details)
-        select_page = len(self.driver.find_elements(By.XPATH, '//*[@id="_GRADINGOBJ_tblDatasTable_paginate"]/ul/li'))
+        select_page = int(self.driver.find_element(By.XPATH, '//*[@id="_GRADINGOBJ_tblDatasTable_paginate"]/ul/li[8]/a')
+                          .text) - 1
         for page in range(1, select_page):
             self.title_base()
             self.content_base(run_num=run_num, data_details=data_details)
@@ -863,6 +885,7 @@ class GetInfo:
                 else:
                     print('第{}页完成，正在跳转下一页'.format(page))
                     next_button = self.driver.find_element(By.XPATH, '//*[@id="_GRADINGOBJ_tblDatasTable_next"]/a')
+                    self.current_page += 1
                     try:
                         next_button.send_keys(Keys.ENTER)  # click方法无效时可使用enter按键尝试
                         time.sleep(3)
@@ -889,6 +912,23 @@ class GetInfo:
             self.search_options()
             print('元素不可点击，1秒后自动重试')
 
+    def recovery_page_num(self):
+        # 恢复页面
+        try:
+            select_page = self.driver.find_elements(By.XPATH,
+                                                    '//*[@id="_GRADINGOBJ_tblDatasTable_paginate"]/ul/li/a')
+            if self.current_page >= 6:
+                for next in range(1, self.current_page):
+                    next_button = self.driver.find_element(By.XPATH, '//*[@id="_GRADINGOBJ_tblDatasTable_next"]/a')
+                    next_button.send_keys(Keys.ENTER)  # click方法无效时可使用enter按键尝试
+                    time.sleep(2)
+            else:
+                select_page[self.current_page].send_keys(Keys.ENTER)
+            time.sleep(1)
+        except StaleElementReferenceException:
+            print('当前页：{}'.format(self.current_page))
+            self.recovery_page_num()
+
 
 if __name__ == '__main__':
     sys.stdout = Logger('./log/抓取网络安全管理日志.log')
@@ -896,3 +936,5 @@ if __name__ == '__main__':
     start = GetInfo('https://www.mii-aqfh.cn/')
     # start.login()
     start.normal_login()
+    # excel = Excel()
+    # excel.auto_set_row_col(r'./output_file/定级信息2021-07-19_165528.xlsx')
